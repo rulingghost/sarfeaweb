@@ -646,6 +646,129 @@ const TestimonialSlider = ({ testimonials }) => {
   );
 };
 
+const CookieConsent = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const consent = localStorage.getItem('cookieConsent');
+    if (!consent) {
+      const timer = setTimeout(() => setIsVisible(true), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
+
+  const handleAccept = () => {
+    localStorage.setItem('cookieConsent', 'true');
+    setIsVisible(false);
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 100, opacity: 0 }}
+          className="fixed bottom-4 left-4 right-4 md:left-8 md:right-auto md:max-w-md z-[120] bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-800 flex flex-col gap-4"
+        >
+          <div className="flex items-start gap-4">
+            <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg text-blue-600 dark:text-blue-400">
+              <ShieldCheck size={24} />
+            </div>
+            <div>
+              <h4 className="font-bold text-slate-900 dark:text-white mb-1">Çerez Politikası</h4>
+              <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                Deneyiminizi iyileştirmek için çerezleri kullanıyoruz. Sitemizi kullanarak bunu kabul etmiş sayılırsınız.
+              </p>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button onClick={() => setIsVisible(false)} className="flex-1 px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
+              Reddet
+            </button>
+            <button onClick={handleAccept} className="flex-1 px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-lg shadow-blue-500/20">
+              Kabul Et
+            </button>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const Timeline = () => {
+  const events = [
+    { year: "2018", title: "Kuruluş", desc: "Ankara'da küçük bir ofiste 3 kişilik çekirdek ekiple yolculuğumuz başladı." },
+    { year: "2019", title: "İlk Büyük Proje", desc: "Global bir lojistik firması için geliştirdiğimiz ERP sistemi ile sektöre adımızı duyurduk." },
+    { year: "2021", title: "Ar-Ge Merkezi", desc: "Teknopark ofisimize geçiş yaptık ve resmi Ar-Ge merkezi unvanını aldık." },
+    { year: "2023", title: "Global Açılım", desc: "Avrupa ve Orta Doğu pazarına açılarak ihracat odaklı büyümeye geçtik." },
+    { year: "2024", title: "Yapay Zeka Yatırımı", desc: "Kendi AI laboratuvarımızı kurarak akıllı iş çözümleri üretmeye başladık." }
+  ];
+
+  return (
+    <div className="relative py-10">
+      <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 dark:bg-slate-800 transform md:-translate-x-1/2"></div>
+      <div className="space-y-12">
+        {events.map((event, i) => (
+          <Reveal key={i}>
+            <div className={`flex flex-col md:flex-row gap-8 items-center ${i % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+              <div className="flex-1 w-full md:w-auto pl-12 md:pl-0 md:text-right">
+                {i % 2 === 0 && (
+                  <div className="hidden md:block">
+                    <span className="text-5xl font-black text-slate-200 dark:text-slate-800">{event.year}</span>
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mt-2">{event.title}</h4>
+                    <p className="text-slate-600 dark:text-slate-400 mt-2">{event.desc}</p>
+                  </div>
+                )}
+                <div className="md:hidden">
+                    <span className="text-4xl font-black text-blue-600 dark:text-blue-400">{event.year}</span>
+                    <h4 className="text-lg font-bold text-slate-900 dark:text-white mt-1">{event.title}</h4>
+                    <p className="text-sm text-slate-600 dark:text-slate-400 mt-2">{event.desc}</p>
+                </div>
+              </div>
+              
+              <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-blue-600 rounded-full border-4 border-white dark:border-slate-950 transform -translate-x-1/2 z-10 shadow-lg"></div>
+              
+              <div className="flex-1 w-full md:w-auto pl-12 md:pl-0 md:text-left">
+                {i % 2 !== 0 && (
+                  <div className="hidden md:block">
+                    <span className="text-5xl font-black text-slate-200 dark:text-slate-800">{event.year}</span>
+                    <h4 className="text-xl font-bold text-slate-900 dark:text-white mt-2">{event.title}</h4>
+                    <p className="text-slate-600 dark:text-slate-400 mt-2">{event.desc}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const Newsletter = () => {
+  return (
+    <section className="py-20 relative overflow-hidden bg-slate-900">
+      <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-900/20"></div>
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+      <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Teknoloji Bültenimize Abone Olun</h2>
+        <p className="text-blue-100 mb-8 max-w-2xl mx-auto">En yeni teknoloji trendleri, yazılım dünyasından haberler ve Sarfea'dan güncellemeler için bültenimize katılın.</p>
+        <form className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
+          <input 
+            type="email" 
+            placeholder="E-posta adresiniz" 
+            className="flex-1 px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:bg-white/20 transition-colors backdrop-blur-sm"
+          />
+          <button className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
+            Abone Ol
+          </button>
+        </form>
+      </div>
+    </section>
+  );
+};
+
 function useInView(ref) {
   const [isIntersecting, setIntersecting] = useState(false);
 
@@ -1446,6 +1569,14 @@ function App() {
                 </Reveal>
               </div>
 
+              <div className="mb-32">
+                 <SectionHeader 
+                    title="Yolculuğumuz" 
+                    subtitle="Küçük bir ofisten global bir teknoloji şirketine uzanan hikayemiz." 
+                 />
+                 <Timeline />
+              </div>
+
               <div className="mb-24">
                 <h3 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16 tracking-tight">Çözüm Alanlarımız</h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -1665,6 +1796,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 font-sans selection:bg-purple-500/30 dark:selection:bg-blue-500/30">
+      <CookieConsent />
       <motion.div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left z-[100] shadow-[0_1px_8px_rgba(59,130,246,0.5)]" style={{ scaleX }} />
       
       {/* Scroll to Top Button */}
@@ -1710,6 +1842,7 @@ function App() {
         </motion.main>
       </AnimatePresence>
 
+      <Newsletter />
       <footer className="bg-slate-950 text-white py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 pointer-events-none"></div>
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-900 via-blue-900/50 to-slate-900"></div>
