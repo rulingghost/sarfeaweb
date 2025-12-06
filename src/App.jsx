@@ -1,5 +1,6 @@
 ﻿import React, { useState, useEffect, useRef } from 'react';
 import logoImage from './assets/logo.png';
+import logoDarkImage from './assets/logo-dark.png';
 import { 
   LayoutDashboard, Smartphone, BarChart3, CheckCircle2, ArrowRight, 
   Menu, X, Mail, Phone, Globe, Zap, 
@@ -12,6 +13,7 @@ import {
   Boxes, GitBranch, Terminal, Wifi, Lock, Fingerprint, MousePointer2, ArrowLeft
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
+import { translations } from './translations';
 
 // --- YENİ ETKİLEŞİMLİ BİLEŞENLER ---
 
@@ -105,7 +107,7 @@ const TiltContainer = ({ children }) => {
 
 // --- YARDIMCI BİLEŞENLER ---
 
-const Toast = ({ message, onClose }) => (
+const Toast = ({ message, onClose, t }) => (
   <motion.div 
     initial={{ opacity: 0, y: 50, x: '50%' }}
     animate={{ opacity: 1, y: 0, x: '50%' }}
@@ -114,7 +116,7 @@ const Toast = ({ message, onClose }) => (
   >
     <CheckCircle className="text-green-500" size={24} />
     <div>
-      <h4 className="font-bold text-sm">Talep Alındı!</h4>
+      <h4 className="font-bold text-sm">{t?.toast?.title || "Talep Alındı!"}</h4>
       <p className="text-sm opacity-90">{message}</p>
     </div>
     <button onClick={onClose} className="ml-auto opacity-50 hover:opacity-100 transition-opacity">
@@ -124,22 +126,28 @@ const Toast = ({ message, onClose }) => (
 );
 
 // GÜNCELLENMİŞ PROJECT CALCULATOR (FORMSPREE ENTEGRASYONLU)
-const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
+const ProjectCalculator = ({ isOpen, onClose, onShowToast, t }) => {
   const [selections, setSelections] = useState([]);
   const [step, setStep] = useState(1); // 1: Seçim, 2: İletişim Formu
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const options = [
-    { id: 'web', label: 'Kurumsal Web Platformu', score: 10, icon: Laptop, color: 'blue', category: 'Platform' },
-    { id: 'mobile', label: 'Native Mobil Uygulama', score: 25, icon: Smartphone, color: 'purple', category: 'Platform' },
-    { id: 'crm', label: 'Özel CRM/Müşteri Yönetimi', score: 15, icon: Users, color: 'green', category: 'Yazılım' },
-    { id: 'erp', label: 'ERP & Stok Yönetimi', score: 20, icon: Boxes, color: 'orange', category: 'Yazılım' },
-    { id: 'api', label: '3. Parti Entegrasyonlar', score: 8, icon: GitBranch, color: 'cyan', category: 'Entegrasyon' },
-    { id: 'payment', label: 'Ödeme Sistemleri', score: 5, icon: CreditCard, color: 'red', category: 'Entegrasyon' },
-    { id: 'ai', label: 'Yapay Zeka & Analitik', score: 30, icon: Cpu, color: 'indigo', category: 'İleri Teknoloji' },
-    { id: 'iot', label: 'IoT & Cihaz Haberleşmesi', score: 25, icon: Wifi, color: 'teal', category: 'İleri Teknoloji' },
-    { id: 'sec', label: 'Yüksek Güvenlik & Loglama', score: 10, icon: ShieldCheck, color: 'slate', category: 'Altyapı' },
+  const staticOptions = [
+    { id: 'web', icon: Laptop, color: 'blue' },
+    { id: 'mobile', icon: Smartphone, color: 'purple' },
+    { id: 'crm', icon: Users, color: 'green' },
+    { id: 'erp', icon: Boxes, color: 'orange' },
+    { id: 'api', icon: GitBranch, color: 'cyan' },
+    { id: 'payment', icon: CreditCard, color: 'red' },
+    { id: 'ai', icon: Cpu, color: 'indigo' },
+    { id: 'iot', icon: Wifi, color: 'teal' },
+    { id: 'sec', icon: ShieldCheck, color: 'slate' },
   ];
+
+  const options = staticOptions.map((opt, i) => ({
+      ...opt,
+      label: t.calculator.options[i].label,
+      category: t.calculator.options[i].category
+  }));
 
   const toggleSelection = (option) => {
     if (selections.find(s => s.id === option.id)) {
@@ -177,7 +185,7 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
       });
 
       if (response.ok) {
-        if (onShowToast) onShowToast("Kapsam teklifiniz başarıyla alındı. Sizinle iletişime geçeceğiz.");
+        if (onShowToast) onShowToast(t.calculator.success);
         onClose();
         // Reset states after close
         setTimeout(() => {
@@ -186,7 +194,7 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
         }, 500);
       } else {
         const errorData = await response.json();
-        alert(errorData.error || "Bir hata oluştu.");
+        alert(errorData.error || t.calculator.error);
       }
     } catch (error) {
       alert("Bağlantı hatası.");
@@ -216,10 +224,10 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
           <div>
             <h3 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Calculator className="text-blue-600 dark:text-blue-400" /> 
-              {step === 1 ? "Proje Kapsam Belirleyici" : "Teklif Formu"}
+              {step === 1 ? t.calculator.step1_title : t.calculator.step2_title}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              {step === 1 ? "İhtiyacınız olan modülleri seçin." : "İletişim bilgilerinizi girin, teklifinizi iletelim."}
+              {step === 1 ? t.calculator.step1_desc : t.calculator.step2_desc}
             </p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-full transition-colors text-slate-500">
@@ -256,34 +264,34 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
             ) : (
                 <form id="calculator-form" onSubmit={handleCalculatorSubmit} className="space-y-4">
                     <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800/30 mb-4">
-                        <h4 className="font-bold text-blue-800 dark:text-blue-300 text-sm mb-2">Seçilen Kapsam:</h4>
+                        <h4 className="font-bold text-blue-800 dark:text-blue-300 text-sm mb-2">{t.calculator.selected_scope}</h4>
                         <div className="flex flex-wrap gap-2">
                             {selections.map((s, i) => (
                                 <span key={i} className="text-[11px] px-2 py-1 bg-white dark:bg-slate-800 rounded border border-blue-200 dark:border-blue-800 text-slate-600 dark:text-slate-300 font-medium">
                                     {s.label}
                                 </span>
                             ))}
-                            {selections.length === 0 && <span className="text-xs text-slate-500 italic">Modül seçilmedi.</span>}
+                            {selections.length === 0 && <span className="text-xs text-slate-500 italic">{t.calculator.no_module}</span>}
                         </div>
                     </div>
                     
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Ad Soyad</label>
-                        <input required name="name" type="text" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none" placeholder="Adınız Soyadınız" />
+                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t.calculator.name}</label>
+                        <input required name="name" type="text" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none" placeholder={t.calculator.name} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">E-posta</label>
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t.calculator.email}</label>
                             <input required name="email" type="email" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none" placeholder="mail@ornek.com" />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Telefon</label>
+                            <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t.calculator.phone}</label>
                             <input name="phone" type="tel" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none" placeholder="0555..." />
                         </div>
                     </div>
                     <div className="space-y-2">
-                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">Ek Notlar (Opsiyonel)</label>
-                        <textarea name="note" rows="2" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none resize-none" placeholder="Varsa eklemek istedikleriniz..."></textarea>
+                        <label className="text-sm font-bold text-slate-700 dark:text-slate-300">{t.calculator.notes}</label>
+                        <textarea name="note" rows="2" className="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 outline-none resize-none" placeholder={t.calculator.notes_ph}></textarea>
                     </div>
                 </form>
             )}
@@ -294,7 +302,7 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
           {step === 1 ? (
              <>
                 <div className="flex justify-between items-center mb-4">
-                    <span className="text-slate-500 dark:text-slate-400 font-medium text-sm">Seçilen Modül Sayısı:</span>
+                    <span className="text-slate-500 dark:text-slate-400 font-medium text-sm">{t.calculator.selected_count}</span>
                     <div className="flex items-center gap-2">
                         <motion.div 
                             key={selections.length}
@@ -302,7 +310,7 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
                             animate={{ scale: 1, color: 'inherit' }}
                             className="font-bold text-slate-900 dark:text-white"
                         >
-                            {selections.length} Adet
+                            {selections.length} {t.calculator.pieces}
                         </motion.div>
                     </div>
                 </div>
@@ -311,7 +319,7 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
                     className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 group relative overflow-hidden"
                 >
                     <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
-                    Teklif Oluşturmak İçin Devam Et <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform"/>
+                    {t.calculator.continue} <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform"/>
                 </button>
              </>
           ) : (
@@ -332,11 +340,11 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast }) => {
                     {isSubmitting ? (
                         <>
                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                           Gönderiliyor...
+                           {t.calculator.submitting}
                         </>
                     ) : (
                         <>
-                           Kapsam Teklifini Gönder <Send size={18} />
+                           {t.calculator.submit} <Send size={18} />
                         </>
                     )}
                 </button>
@@ -363,7 +371,7 @@ const SectionHeader = ({ title, subtitle }) => (
   </div>
 );
 
-const AdvancedCRMPreview = () => {
+const AdvancedCRMPreview = ({ t }) => {
   return (
     <div className="w-full h-full bg-[#0f172a] p-2 flex gap-0 overflow-hidden select-none cursor-default font-sans text-xs shadow-2xl relative">
        {/* Glass Effect Overlay for depth */}
@@ -387,14 +395,14 @@ const AdvancedCRMPreview = () => {
         {/* Top Bar */}
         <div className="h-14 border-b border-slate-800 flex items-center justify-between px-6 bg-[#0f172a]">
            <div className="flex items-center gap-3 text-slate-400">
-             <span className="font-semibold text-white">Dashboard</span>
+             <span className="font-semibold text-white">{t.crm_preview.dashboard}</span>
              <ChevronRight size={14}/>
-             <span>Genel Bakış</span>
+             <span>{t.crm_preview.overview}</span>
            </div>
            <div className="flex items-center gap-4">
              <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 rounded-full border border-slate-700">
                 <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                <span className="text-slate-300">Sistem Online</span>
+                <span className="text-slate-300">{t.crm_preview.system_online}</span>
              </div>
              <Bell size={16} className="text-slate-400 hover:text-white transition-colors cursor-pointer"/>
              <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-purple-500 to-blue-500 border border-white/20"></div>
@@ -407,7 +415,7 @@ const AdvancedCRMPreview = () => {
            <div className="col-span-2 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50 relative overflow-hidden group">
               <div className="flex justify-between items-start mb-4">
                  <div>
-                    <h5 className="text-slate-400 mb-1">Toplam Gelir</h5>
+                    <h5 className="text-slate-400 mb-1">{t.crm_preview.total_revenue}</h5>
                     <span className="text-2xl font-bold text-white">₺842,500</span>
                  </div>
                  <div className="px-2 py-1 bg-green-500/10 text-green-400 rounded text-[10px] font-bold">+12.5%</div>
@@ -432,12 +440,12 @@ const AdvancedCRMPreview = () => {
 
            {/* Card 2: Active Modules */}
            <div className="col-span-1 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50 flex flex-col gap-3">
-              <h5 className="text-slate-400 font-semibold mb-1">Aktif Modüller</h5>
+              <h5 className="text-slate-400 font-semibold mb-1">{t.crm_preview.active_modules}</h5>
               <div className="flex items-center gap-3 p-2 bg-slate-800/50 rounded-lg border border-slate-700/30 hover:border-purple-500/50 transition-colors">
                  <div className="p-1.5 bg-purple-500/20 text-purple-400 rounded"><Boxes size={14}/></div>
                  <div className="flex-1">
                     <div className="text-white font-medium">ERP Stok</div>
-                    <div className="text-[10px] text-slate-500">Senkronize</div>
+                    <div className="text-[10px] text-slate-500">{t.crm_preview.sync}</div>
                  </div>
                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
               </div>
@@ -445,7 +453,7 @@ const AdvancedCRMPreview = () => {
                  <div className="p-1.5 bg-orange-500/20 text-orange-400 rounded"><Users size={14}/></div>
                  <div className="flex-1">
                     <div className="text-white font-medium">İK Portalı</div>
-                    <div className="text-[10px] text-slate-500">32 Çalışan</div>
+                    <div className="text-[10px] text-slate-500">32 {t.crm_preview.employees}</div>
                  </div>
                  <div className="w-2 h-2 rounded-full bg-green-500"></div>
               </div>
@@ -458,22 +466,22 @@ const AdvancedCRMPreview = () => {
            {/* Card 3: Recent Integrations */}
            <div className="col-span-3 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50">
               <div className="flex justify-between items-center mb-3">
-                 <h5 className="text-slate-400 font-semibold">Son Entegrasyonlar</h5>
-                 <button className="text-blue-400 hover:text-blue-300">Tümü</button>
+                 <h5 className="text-slate-400 font-semibold">{t.crm_preview.recent_integrations}</h5>
+                 <button className="text-blue-400 hover:text-blue-300">{t.crm_preview.all}</button>
               </div>
               <div className="grid grid-cols-2 gap-3">
                  <div className="flex items-center gap-3 group/item cursor-pointer">
                     <div className="w-8 h-8 rounded bg-white flex items-center justify-center group-hover/item:scale-110 transition-transform"><img src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg" className="w-5" alt="G"/></div>
                     <div>
                        <div className="text-white font-medium group-hover/item:text-blue-400 transition-colors">Google Ads</div>
-                       <div className="text-[10px] text-slate-500">Veri Akışı Açık</div>
+                       <div className="text-[10px] text-slate-500">{t.crm_preview.data_flow}</div>
                     </div>
                  </div>
                  <div className="flex items-center gap-3 group/item cursor-pointer">
                     <div className="w-8 h-8 rounded bg-[#0052cc] flex items-center justify-center text-white font-bold text-[10px] group-hover/item:scale-110 transition-transform">Jira</div>
                     <div>
                        <div className="text-white font-medium group-hover/item:text-blue-400 transition-colors">Atlassian Jira</div>
-                       <div className="text-[10px] text-slate-500">Task Otonomasyonu</div>
+                       <div className="text-[10px] text-slate-500">{t.crm_preview.task_automation}</div>
                     </div>
                  </div>
               </div>
@@ -488,8 +496,8 @@ const AdvancedCRMPreview = () => {
            >
               <div className="p-1.5 bg-green-500/20 text-green-400 rounded-full"><Zap size={14}/></div>
               <div>
-                 <div className="font-bold text-xs">Otomasyon Tetiklendi</div>
-                 <div className="text-[10px] text-slate-400">Yeni sipariş → Faturalandırıldı</div>
+                 <div className="font-bold text-xs">{t.crm_preview.automation_triggered}</div>
+                 <div className="text-[10px] text-slate-400">{t.crm_preview.new_order}</div>
               </div>
            </motion.div>
         </div>
@@ -646,7 +654,7 @@ const TestimonialSlider = ({ testimonials }) => {
   );
 };
 
-const CookieConsent = () => {
+const CookieConsent = ({ t }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -676,18 +684,18 @@ const CookieConsent = () => {
               <ShieldCheck size={24} />
             </div>
             <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-1">Çerez Politikası</h4>
+              <h4 className="font-bold text-slate-900 dark:text-white mb-1">{t?.cookie?.title || "Çerez Politikası"}</h4>
               <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
-                Deneyiminizi iyileştirmek için çerezleri kullanıyoruz. Sitemizi kullanarak bunu kabul etmiş sayılırsınız.
+                {t?.cookie?.text || "Deneyiminizi iyileştirmek için çerezleri kullanıyoruz."}
               </p>
             </div>
           </div>
           <div className="flex gap-3">
             <button onClick={() => setIsVisible(false)} className="flex-1 px-4 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors">
-              Reddet
+              {t?.cookie?.reject || "Reddet"}
             </button>
             <button onClick={handleAccept} className="flex-1 px-4 py-2 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition-colors shadow-lg shadow-blue-500/20">
-              Kabul Et
+              {t?.cookie?.accept || "Kabul Et"}
             </button>
           </div>
         </motion.div>
@@ -696,14 +704,8 @@ const CookieConsent = () => {
   );
 };
 
-const Timeline = () => {
-  const events = [
-    { year: "2018", title: "Kuruluş", desc: "Ankara'da küçük bir ofiste 3 kişilik çekirdek ekiple yolculuğumuz başladı." },
-    { year: "2019", title: "İlk Büyük Proje", desc: "Global bir lojistik firması için geliştirdiğimiz ERP sistemi ile sektöre adımızı duyurduk." },
-    { year: "2021", title: "Ar-Ge Merkezi", desc: "Teknopark ofisimize geçiş yaptık ve resmi Ar-Ge merkezi unvanını aldık." },
-    { year: "2023", title: "Global Açılım", desc: "Avrupa ve Orta Doğu pazarına açılarak ihracat odaklı büyümeye geçtik." },
-    { year: "2024", title: "Yapay Zeka Yatırımı", desc: "Kendi AI laboratuvarımızı kurarak akıllı iş çözümleri üretmeye başladık." }
-  ];
+const Timeline = ({ t }) => {
+  const events = t.about_page.timeline_events;
 
   return (
     <div className="relative py-10">
@@ -746,22 +748,22 @@ const Timeline = () => {
   );
 };
 
-const Newsletter = () => {
+const Newsletter = ({ t }) => {
   return (
     <section className="py-20 relative overflow-hidden bg-slate-900">
       <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-900/20"></div>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
       <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Teknoloji Bültenimize Abone Olun</h2>
-        <p className="text-blue-100 mb-8 max-w-2xl mx-auto">En yeni teknoloji trendleri, yazılım dünyasından haberler ve Sarfea'dan güncellemeler için bültenimize katılın.</p>
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t?.newsletter?.title || "Teknoloji Bültenimize Abone Olun"}</h2>
+        <p className="text-blue-100 mb-8 max-w-2xl mx-auto">{t?.newsletter?.text || "En yeni teknoloji trendleri, yazılım dünyasından haberler ve Sarfea'dan güncellemeler için bültenimize katılın."}</p>
         <form className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
           <input 
             type="email" 
-            placeholder="E-posta adresiniz" 
+            placeholder={t?.newsletter?.placeholder || "E-posta adresiniz"} 
             className="flex-1 px-6 py-4 rounded-xl bg-white/10 border border-white/20 text-white placeholder-blue-200 focus:outline-none focus:bg-white/20 transition-colors backdrop-blur-sm"
           />
           <button className="px-8 py-4 bg-white text-blue-600 font-bold rounded-xl hover:bg-blue-50 transition-colors shadow-lg">
-            Abone Ol
+            {t?.newsletter?.button || "Abone Ol"}
           </button>
         </form>
       </div>
@@ -836,7 +838,7 @@ const Reveal = ({ children, delay = 0, className = "" }) => {
   );
 };
 
-const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }) => {
+const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, language, setLanguage, t }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNavClick = (page) => {
@@ -849,7 +851,7 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
       {isScrolled && <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
         <div className="flex items-center gap-2.5 cursor-pointer group" onClick={() => handleNavClick('home')}>
-          <img src={logoImage} alt="SARFEA Logo" className="h-11 w-auto object-contain group-hover:scale-105 group-active:scale-95 transition-all duration-300" />
+          <img src={darkMode ? logoDarkImage : logoImage} alt="SARFEA Logo" className={`${darkMode ? 'h-14 scale-[2.4] translate-x-16' : 'h-11'} w-auto object-contain transition-all duration-300`} />
         </div>
 
         <div className="hidden md:flex items-center gap-8">
@@ -859,10 +861,10 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
               onClick={() => handleNavClick(page)}
               className={`text-[13px] font-bold uppercase tracking-widest transition-all relative group py-2 ${activePage === page ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'}`}
             >
-              {page === 'home' ? 'Anasayfa' : 
-               page === 'solutions' ? 'Teknolojiler' : 
-               page === 'process' ? 'Süreç' :
-               page === 'about' ? 'Kurumsal' : 'İletişim'}
+              {page === 'home' ? t.navbar.home : 
+               page === 'solutions' ? t.navbar.solutions : 
+               page === 'process' ? t.navbar.process :
+               page === 'about' ? t.navbar.about : t.navbar.contact}
               <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${activePage === page ? 'scale-x-100' : ''}`}></span>
             </button>
           ))}
@@ -872,8 +874,40 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
           <button onClick={() => setDarkMode(!darkMode)} className="w-11 h-11 rounded-full border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-yellow-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700">
             {darkMode ? <Sun size={20} className="hover:rotate-90 transition-transform" /> : <Moon size={20} className="hover:-rotate-12 transition-transform" />}
           </button>
+          
+          <div className="relative group/lang">
+            <button 
+               className="w-11 h-11 rounded-full border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700 font-bold text-sm"
+            >
+               {language.toUpperCase()}
+            </button>
+            <div className="absolute top-full right-0 pt-2 w-32 hidden group-hover/lang:block animate-in fade-in slide-in-from-top-2">
+              <div className="bg-white dark:bg-slate-900 rounded-xl shadow-xl border border-slate-100 dark:border-slate-800 overflow-hidden">
+                {[
+                  { code: 'tr', label: 'Türkçe' },
+                  { code: 'en', label: 'English' },
+                  { code: 'ar', label: 'العربية' },
+                  { code: 'fr', label: 'Français' },
+                  { code: 'ku', label: 'Kurdî' },
+                  { code: 'de', label: 'Deutsch' },
+                  { code: 'ru', label: 'Русский' },
+                  { code: 'ckb', label: 'Soranî' }
+                ].map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setLanguage(lang.code)}
+                    className={`w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 ${language === lang.code ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10' : 'text-slate-600 dark:text-slate-300'}`}
+                  >
+                    <span className={`w-2 h-2 rounded-full ${language === lang.code ? 'bg-blue-600' : 'bg-transparent'}`}></span>
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <button onClick={() => handleNavClick('contact')} className="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-white dark:to-slate-100 hover:from-blue-600 hover:to-indigo-600 dark:hover:from-blue-500 dark:hover:to-indigo-500 text-white dark:text-slate-900 px-7 py-3 rounded-full font-bold transition-all shadow-lg shadow-slate-900/10 dark:shadow-white/5 hover:shadow-blue-500/30 flex items-center gap-2 group hover:scale-[1.02] active:scale-[0.98]">
-            <Zap size={18} className="group-hover:fill-current transition-colors"/> Proje Başlat
+            <Zap size={18} className="group-hover:fill-current transition-colors"/> {t.navbar.startProject}
           </button>
         </div>
 
@@ -899,16 +933,16 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
                   className={`block w-full text-left p-4 rounded-2xl font-bold transition-all ${activePage === page ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 pl-6 border-l-4 border-blue-600' : 'hover:bg-slate-50 dark:hover:bg-slate-800/50 text-slate-600 dark:text-slate-300 hover:pl-6'}`}
                 >
                   <span className="capitalize flex items-center justify-between">
-                    {page === 'home' ? 'Anasayfa' : 
-                     page === 'solutions' ? 'Teknolojiler' : 
-                     page === 'process' ? 'Süreç' :
-                     page === 'about' ? 'Kurumsal' : 'İletişim'}
+                    {page === 'home' ? t.navbar.home : 
+                     page === 'solutions' ? t.navbar.solutions : 
+                     page === 'process' ? t.navbar.process :
+                     page === 'about' ? t.navbar.about : t.navbar.contact}
                     {activePage === page && <ChevronRight size={18} />}
                   </span>
                 </button>
               ))}
               <div className="flex items-center justify-between px-4 py-4 bg-slate-50 dark:bg-slate-900/50 rounded-2xl mt-2">
-                  <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">{darkMode ? <Moon size={18}/> : <Sun size={18}/>} Karanlık Mod</span>
+                  <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2">{darkMode ? <Moon size={18}/> : <Sun size={18}/>} {darkMode ? t.navbar.darkMode : t.navbar.lightMode}</span>
                   <button onClick={() => setDarkMode(!darkMode)} className={`w-14 h-8 rounded-full relative transition-colors ${darkMode ? 'bg-blue-600' : 'bg-slate-300'}`}>
                      <div className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-all shadow-sm flex items-center justify-center ${darkMode ? 'translate-x-6' : ''}`}>
                         {darkMode ? <Moon size={14} className="text-blue-600"/> : <Sun size={14} className="text-yellow-500"/>}
@@ -916,7 +950,7 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
                   </button>
               </div>
               <button onClick={() => handleNavClick('contact')} className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                <Zap size={18} fill="currentColor"/> Proje Başlat
+                <Zap size={18} fill="currentColor"/> {t.navbar.startProject}
               </button>
             </div>
           </motion.div>
@@ -926,7 +960,7 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode }
   );
 };
 
-const HeroSection = ({ navigateTo, onOpenCalculator }) => {
+const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -953,26 +987,26 @@ const HeroSection = ({ navigateTo, onOpenCalculator }) => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-500 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-3 w-3 bg-gradient-to-r from-blue-500 to-indigo-500"></span>
               </span>
-              Sarfea Enterprise v5.0 Yayında
+              {t.hero.tag}
             </div>
             
             <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1]">
-              Sınırsız <br/>
+              {t.hero.title_prefix} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
-                Dijital Ekosistemler
+                {t.hero.title_suffix}
               </span>
             </h1>
             
             <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed max-w-lg font-medium">
-              Web, Mobil, ERP, CRM, Yapay Zeka ve IoT entegrasyonları. İşletmenizin ihtiyaç duyduğu her şeyi tek bir çatı altında kodluyoruz.
+              {t.hero.description}
             </p>
             
             <div className="flex flex-wrap gap-5">
               <button onClick={() => navigateTo('contact')} className="px-10 py-4 bg-gradient-to-r from-slate-900 to-indigo-900 dark:from-white dark:to-slate-200 text-white dark:text-slate-900 rounded-2xl font-bold transition-all hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20 active:scale-95 flex items-center gap-3 group">
-                Hemen Başlayalım <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+                {t.hero.btn_start} <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
               <button onClick={onOpenCalculator} className="px-10 py-4 bg-white/80 dark:bg-slate-800/80 border-2 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white rounded-2xl font-bold transition-all hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 backdrop-blur-sm flex items-center gap-3 group active:scale-95">
-                <Calculator size={20} className="text-blue-600 dark:text-blue-400 group-hover:rotate-12 transition-transform"/> Kapsam Belirle
+                <Calculator size={20} className="text-blue-600 dark:text-blue-400 group-hover:rotate-12 transition-transform"/> {t.hero.btn_scope}
               </button>
             </div>
 
@@ -993,7 +1027,7 @@ const HeroSection = ({ navigateTo, onOpenCalculator }) => {
                   <Star size={18} fill="currentColor" />
                   <Star size={18} fill="currentColor" />
                 </div>
-                <p className="text-sm text-slate-600 dark:text-slate-400 font-bold mt-1"><span className="text-slate-900 dark:text-white">100+</span> Kurumsal Referans</p>
+                <p className="text-sm text-slate-600 dark:text-slate-400 font-bold mt-1"><span className="text-slate-900 dark:text-white">100+</span> {t.hero.references}</p>
               </div>
             </div>
           </motion.div>
@@ -1008,7 +1042,7 @@ const HeroSection = ({ navigateTo, onOpenCalculator }) => {
             {/* 3D Tilt Wrapper Ekledim */}
             <TiltContainer>
                 <div className="relative z-10 bg-[#0f172a] rounded-[1.5rem] p-0 shadow-2xl shadow-blue-900/40 border-4 border-slate-800 transition-all duration-300 group overflow-hidden">
-                    <AdvancedCRMPreview />
+                    <AdvancedCRMPreview t={t} />
                 </div>
             </TiltContainer>
             
@@ -1024,8 +1058,8 @@ const HeroSection = ({ navigateTo, onOpenCalculator }) => {
                   <Activity size={24} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sistem Durumu</p>
-                  <p className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-1">%99.9 <span className="text-green-500 text-xs">Uptime</span></p>
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.crm_preview.system_status}</p>
+                  <p className="text-xl font-black text-slate-900 dark:text-white flex items-center gap-1">%99.9 <span className="text-green-500 text-xs">{t.crm_preview.uptime}</span></p>
                 </div>
               </div>
             </motion.div>
@@ -1041,8 +1075,8 @@ const HeroSection = ({ navigateTo, onOpenCalculator }) => {
                   <Share2 size={24} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Entegrasyon</p>
-                  <p className="text-xl font-black text-slate-900 dark:text-white">API Ready</p>
+                  <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.crm_preview.integration}</p>
+                  <p className="text-xl font-black text-slate-900 dark:text-white">{t.crm_preview.api_ready}</p>
                 </div>
               </div>
             </motion.div>
@@ -1061,6 +1095,16 @@ function App() {
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Language State
+  const [language, setLanguage] = useState(() => localStorage.getItem('language') || 'tr');
+  const t = translations[language];
+
+  useEffect(() => {
+    localStorage.setItem('language', language);
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
     
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
@@ -1137,13 +1181,13 @@ function App() {
       case 'home':
         return (
           <>
-            <HeroSection navigateTo={setActivePage} onOpenCalculator={() => setIsCalculatorOpen(true)} />
+            <HeroSection navigateTo={setActivePage} onOpenCalculator={() => setIsCalculatorOpen(true)} t={t} />
             
             <section className="py-24 bg-white dark:bg-slate-900 relative z-10">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <SectionHeader 
-                  title="Entegre Çalıştığımız Devler" 
-                  subtitle="Global standartlarda altyapı ve servis sağlayıcılarla tam uyumlu çalışıyoruz." 
+                  title={t.stats_section.title} 
+                  subtitle={t.stats_section.subtitle} 
                 />
                 <LogoMarquee />
               </div>
@@ -1155,32 +1199,32 @@ function App() {
                 <div className="grid lg:grid-cols-2 gap-20 items-center">
                   <Reveal>
                     <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8 tracking-tight leading-tight">
-                      Sadece Kod Değil, <br/>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">Uçtan Uca Çözüm</span>
+                      {t.stats_section.main_title_prefix} <br/>
+                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">{t.stats_section.main_title_suffix}</span>
                     </h2>
                     <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed font-medium">
-                      Sarfea olarak biz, bir yazılım şirketinden fazlasıyız. İş süreçlerinizi analiz eden, darboğazları tespit eden ve size özel dijital mimariyi kuran teknoloji ortağınızız. ERP'den CRM'e, IoT'den Yapay Zeka'ya kadar her noktada varız.
+                      {t.stats_section.description}
                     </p>
                     
                     <div className="grid grid-cols-2 gap-8">
                       <SpotlightCard className="p-6 rounded-3xl" color="blue">
                         <div className="text-4xl font-black text-blue-600 dark:text-blue-500 mb-2"><CountUp end={45} />+</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Modül & Entegrasyon</div>
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[0].label}</div>
                       </SpotlightCard>
                       
                       <SpotlightCard className="p-6 rounded-3xl" color="purple">
                         <div className="text-4xl font-black text-purple-600 dark:text-purple-500 mb-2"><CountUp end={120} />+</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Tamamlanan Sistem</div>
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[1].label}</div>
                       </SpotlightCard>
                       
                       <SpotlightCard className="p-6 rounded-3xl" color="green">
                         <div className="text-4xl font-black text-green-600 dark:text-green-500 mb-2"><CountUp end={99} />%</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sistem Uptime</div>
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[2].label}</div>
                       </SpotlightCard>
                       
                       <SpotlightCard className="p-6 rounded-3xl" color="orange">
                         <div className="text-4xl font-black text-orange-600 dark:text-orange-500 mb-2"><CountUp end={24} />/7</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">DevOps Destek</div>
+                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[3].label}</div>
                       </SpotlightCard>
                     </div>
                   </Reveal>
@@ -1202,19 +1246,19 @@ function App() {
             <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <SectionHeader 
-                  title="Teknoloji Yığınımız" 
-                  subtitle="Modern, güvenilir ve ölçeklenebilir altyapılar için kullandığımız teknolojiler." 
+                  title={t.tech_stack.title} 
+                  subtitle={t.tech_stack.subtitle} 
                 />
                 <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
                   {[
-                    { name: "React & Next.js", icon: Code2, desc: "Modern web arayüzleri", color: "blue" },
-                    { name: "Node.js & Python", icon: Server, desc: "Güçlü backend sistemleri", color: "green" },
-                    { name: "AWS & Azure", icon: Cloud, desc: "Bulut altyapı çözümleri", color: "orange" },
-                    { name: "Docker & K8s", icon: Boxes, desc: "Container orkestrasyon", color: "cyan" },
-                    { name: "PostgreSQL & MongoDB", icon: Database, desc: "Esnek veritabanı sistemleri", color: "purple" },
-                    { name: "CI/CD Pipeline", icon: GitBranch, desc: "Otomatik deployment", color: "pink" },
-                    { name: "Microservices", icon: Layers, desc: "Modüler mimari tasarım", color: "indigo" },
-                    { name: "REST & GraphQL", icon: Terminal, desc: "API geliştirme", color: "teal" }
+                    { name: "React & Next.js", icon: Code2, desc: t.tech_stack.items[0].desc, color: "blue" },
+                    { name: "Node.js & Python", icon: Server, desc: t.tech_stack.items[1].desc, color: "green" },
+                    { name: "AWS & Azure", icon: Cloud, desc: t.tech_stack.items[2].desc, color: "orange" },
+                    { name: "Docker & K8s", icon: Boxes, desc: t.tech_stack.items[3].desc, color: "cyan" },
+                    { name: "PostgreSQL & MongoDB", icon: Database, desc: t.tech_stack.items[4].desc, color: "purple" },
+                    { name: "CI/CD Pipeline", icon: GitBranch, desc: t.tech_stack.items[5].desc, color: "pink" },
+                    { name: "Microservices", icon: Layers, desc: t.tech_stack.items[6].desc, color: "indigo" },
+                    { name: "REST & GraphQL", icon: Terminal, desc: t.tech_stack.items[7].desc, color: "teal" }
                   ].map((tech, i) => (
                     <Reveal key={i} delay={i * 50}>
                       <SpotlightCard className={`p-6 rounded-2xl h-full flex flex-col items-center text-center group cursor-default`} color={tech.color}>
@@ -1233,23 +1277,10 @@ function App() {
             <section className="py-32 bg-slate-50 dark:bg-slate-950/50">
               <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
                 <SectionHeader 
-                  title="Merak Edilenler" 
-                  subtitle="Teknik süreçler ve işleyiş hakkında sık sorulan sorular." 
+                  title={t.faq.title} 
+                  subtitle={t.faq.subtitle} 
                 />
-                <FAQAccordion faqs={[
-                  {
-                    question: "Özel bir modüle ihtiyacımız var, geliştirebilir misiniz?",
-                    answer: "Kesinlikle. Biz 'paket program' satıcısı değiliz, çözüm üreticisiyiz. İster özel bir raporlama aracı, ister fabrikanızdaki makineyle konuşan bir IoT yazılımı olsun; ihtiyacınız olan her türlü modülü sıfırdan sizin için kodluyoruz."
-                  },
-                  {
-                    question: "Mevcut kullandığımız yazılımlarla entegrasyon yapıyor musunuz?",
-                    answer: "Evet. SAP, Logo, Mikro, Netsis gibi ERP'lerden; Salesforce, Hubspot gibi CRM'lere kadar her türlü sistemle konuşabilen ara katman yazılımları geliştiriyoruz. Verileriniz izole kalmaz, sistemler arası akar."
-                  },
-                  {
-                    question: "Proje sonrası teknik destek süreciniz nasıl?",
-                    answer: "Yazılım canlıya alındıktan sonra işimiz bitmiyor. SLA (Hizmet Seviyesi Anlaşması) kapsamında 7/24 izleme, güvenlik güncellemeleri ve acil durum müdahaleleri sunuyoruz. Sisteminizin her daim ayakta kalmasını garanti ediyoruz."
-                  }
-                ]} />
+                <FAQAccordion faqs={t.faq.questions} />
               </div>
             </section>
 
@@ -1270,16 +1301,16 @@ function App() {
 
               <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
                 <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight leading-tight drop-shadow-sm">
-                  Projenizi Hayata Geçirmeye Hazır mısınız?
+                  {t.cta.title}
                 </h2>
                 <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-sm">
-                  Fikrinizi dinleyelim, stratejinizi belirleyelim ve dijital dönüşümünüzü başlatalım. Geleceği bugünden kodlayın.
+                  {t.cta.description}
                 </p>
                 <button 
                   onClick={() => setActivePage('contact')}
                   className="bg-white text-blue-600 px-12 py-5 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-2xl shadow-blue-900/30 hover:shadow-blue-900/50 hover:-translate-y-1 active:scale-[0.98] flex items-center gap-3 mx-auto group"
                 >
-                  Ücretsiz Analiz Toplantısı <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform"/>
+                  {t.cta.button} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform"/>
                 </button>
               </div>
             </section>
@@ -1291,8 +1322,8 @@ function App() {
           <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
               <SectionHeader 
-                title="Geniş Hizmet Yelpazemiz" 
-                subtitle="İhtiyacınız olan teknoloji ne olursa olsun, uzman ekibimizle yanınızdayız." 
+                title={t.solutions_page.title} 
+                subtitle={t.solutions_page.subtitle} 
               />
               
               <div className="mb-24">
@@ -1309,73 +1340,27 @@ function App() {
               {/* Spotlight Efekti Eklenmiş Çözüm Kartları */}
               <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-32">
                 {[
-                  {
-                    icon: LayoutDashboard,
-                    title: "Web Platformları",
-                    desc: "Kurumsal, hızlı ve ölçeklenebilir web uygulamaları.",
-                    tags: ["React", "Next.js", "PWA"],
-                    color: "blue"
-                  },
-                  {
-                    icon: Smartphone,
-                    title: "Mobil Uygulama",
-                    desc: "iOS ve Android dünyasında yerinizi alın.",
-                    tags: ["React Native", "Flutter", "Swift"],
-                    color: "purple"
-                  },
-                  {
-                    icon: ShoppingBagIcon,
-                    title: "E-Ticaret & B2B",
-                    desc: "Satışlarınızı artıran güvenli altyapılar.",
-                    tags: ["Pazaryeri Entegrasyonu", "Ödeme"],
-                    color: "green"
-                  },
-                  {
-                    icon: Boxes,
-                    title: "ERP & Stok",
-                    desc: "Depo, üretim ve stok süreçlerini optimize edin.",
-                    tags: ["Barkod", "Üretim Takip", "Lojistik"],
-                    color: "orange"
-                  },
-                  {
-                    icon: Users,
-                    title: "CRM Çözümleri",
-                    desc: "Müşteri ilişkilerinizi ve satış huninizi yönetin.",
-                    tags: ["Pipeline", "Teklif", "Aktivite"],
-                    color: "pink"
-                  },
-                  {
-                    icon: GitBranch,
-                    title: "Entegrasyon (API)",
-                    desc: "Farklı sistemleri birbirine bağlayan köprüler.",
-                    tags: ["SAP", "Mikro", "Logo", "Nebim"],
-                    color: "cyan"
-                  },
-                  {
-                    icon: Cpu,
-                    title: "Yapay Zeka (AI)",
-                    desc: "Verilerinizden anlamlı içgörüler çıkarın.",
-                    tags: ["ML", "Tahminleme", "Chatbot"],
-                    color: "indigo"
-                  },
-                  {
-                    icon: Wifi,
-                    title: "IoT Sistemler",
-                    desc: "Cihazlarınızı internete bağlayıp yönetin.",
-                    tags: ["MQTT", "Sensör", "Otomasyon"],
-                    color: "teal"
-                  }
-                ].map((solution, i) => (
+                  { icon: LayoutDashboard, color: "blue" },
+                  { icon: Smartphone, color: "purple" },
+                  { icon: ShoppingBagIcon, color: "green" },
+                  { icon: Boxes, color: "orange" },
+                  { icon: Users, color: "pink" },
+                  { icon: GitBranch, color: "cyan" },
+                  { icon: Cpu, color: "indigo" },
+                  { icon: Wifi, color: "teal" }
+                ].map((config, i) => {
+                  const item = t.solutions_page.items[i];
+                  return (
                   <Reveal key={i} delay={i * 50}>
                      {/* Spotlight Card Wrapper Kullanıldı */}
-                    <SpotlightCard className="rounded-[2rem] p-6 h-full flex flex-col" color={solution.color}>
-                      <div className={`w-14 h-14 rounded-2xl bg-${solution.color}-100 dark:bg-${solution.color}-900/30 flex items-center justify-center text-${solution.color}-600 dark:text-${solution.color}-400 mb-6 group-hover:scale-110 transition-transform shadow-md shadow-${solution.color}-500/10 relative z-10`}>
-                        <solution.icon size={28} />
+                    <SpotlightCard className="rounded-[2rem] p-6 h-full flex flex-col" color={config.color}>
+                      <div className={`w-14 h-14 rounded-2xl bg-${config.color}-100 dark:bg-${config.color}-900/30 flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 group-hover:scale-110 transition-transform shadow-md shadow-${config.color}-500/10 relative z-10`}>
+                        <config.icon size={28} />
                       </div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{solution.title}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 relative z-10 leading-relaxed flex-1">{solution.desc}</p>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{item.title}</h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 relative z-10 leading-relaxed flex-1">{item.desc}</p>
                       <div className="flex flex-wrap gap-2 relative z-10 mt-auto">
-                        {solution.tags.map((tag, idx) => (
+                        {item.tags.map((tag, idx) => (
                           <span key={idx} className={`text-[10px] font-bold px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700`}>
                             {tag}
                           </span>
@@ -1383,42 +1368,27 @@ function App() {
                       </div>
                     </SpotlightCard>
                   </Reveal>
-                ))}
+                )})}
               </div>
 
               <div className="mb-24">
                 <SectionHeader 
-                  title="Esnek İş Modelleri" 
-                  subtitle="Projenizin büyüklüğüne göre en uygun çalışma modelini seçelim." 
+                  title={t.pricing.title} 
+                  subtitle={t.pricing.subtitle} 
                 />
                 <div className="grid md:grid-cols-3 gap-10 items-start">
                   <PricingCard 
                     onSelect={() => setActivePage('contact')}
-                    plan={{
-                      name: "MVP / Startup",
-                      price: "Proje Bazlı",
-                      description: "Fikrini hızlıca hayata geçirmek isteyen girişimciler için.",
-                      features: ["Temel Özellik Seti", "Hızlı Pazara Çıkış", "Ölçeklenebilir Mimari", "Web & Mobil Uyum", "3 Ay Garanti"]
-                    }} 
+                    plan={t.pricing.plans[0]} 
                   />
                   <PricingCard 
                     isPopular={true}
                     onSelect={() => setActivePage('contact')}
-                    plan={{
-                      name: "Kurumsal Dönüşüm",
-                      price: "Anahtar Teslim",
-                      description: "Şirket içi süreçleri dijitalleştirmek isteyen KOBİ'ler için.",
-                      features: ["Detaylı Analiz & Planlama", "ERP/CRM Modülleri", "Eski Sistem Entegrasyonu", "Personel Eğitimi", "1 Yıl Bakım & Destek"]
-                    }} 
+                    plan={t.pricing.plans[1]} 
                   />
                   <PricingCard 
                     onSelect={() => setActivePage('contact')}
-                    plan={{
-                      name: "Dedicated Team",
-                      price: "Aylık Kiralama",
-                      description: "Uzun soluklu projeler için size özel yazılım ekibi.",
-                      features: ["Size Özel Senior Geliştiriciler", "Esnek Sprint Planlaması", "Doğrudan Yönetim Hakkı", "Sürekli Geliştirme (CI/CD)", "7/24 DevOps Desteği"]
-                    }} 
+                    plan={t.pricing.plans[2]} 
                   />
                 </div>
               </div>
@@ -1431,65 +1401,37 @@ function App() {
           <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
               <SectionHeader 
-                title="Nasıl Çalışıyoruz?" 
-                subtitle="Fikirden ürüne giden yolda şeffaf ve çevik bir süreç." 
+                title={t.process_page.title} 
+                subtitle={t.process_page.subtitle} 
               />
               
               <div className="relative mt-24">
                 <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500/20 via-purple-500/20 to-blue-500/20 hidden md:block rounded-full"></div>
                 
                 {[
-                  {
-                    step: "01",
-                    title: "Keşif ve Analiz",
-                    desc: "Sizi dinliyoruz. İş süreçlerinizi, hedeflerinizi ve acı noktalarınızı analiz edip teknik gereksinim dokümanını hazırlıyoruz.",
-                    icon: Search,
-                    color: "blue"
-                  },
-                  {
-                    step: "02",
-                    title: "UX/UI Tasarım",
-                    desc: "Kullanıcı deneyimini merkeze alarak, modern, anlaşılır ve marka kimliğinize uygun arayüzler tasarlıyoruz.",
-                    icon: LayoutDashboard,
-                    color: "purple"
-                  },
-                  {
-                    step: "03",
-                    title: "Çevik Geliştirme",
-                    desc: "Sprint'ler halinde ilerliyoruz. Her iki haftada bir size çalışan bir demo sunarak geri bildirimlerinizi alıyoruz.",
-                    icon: Code2,
-                    color: "pink"
-                  },
-                  {
-                    step: "04",
-                    title: "Test ve Entegrasyon",
-                    desc: "Otomatik test senaryoları, güvenlik taramaları ve performans testleri ile sistemin kusursuzluğunu doğruluyoruz.",
-                    icon: ShieldCheck,
-                    color: "orange"
-                  },
-                  {
-                    step: "05",
-                    title: "Canlıya Geçiş ve Destek",
-                    desc: "Sistemi devreye alıyor, eğitimleri veriyor ve sonrasında bakım/onarım hizmetlerimizle sistemin sağlığını koruyoruz.",
-                    icon: Rocket,
-                    color: "green"
-                  }
-                ].map((item, i) => (
+                  { icon: Search, color: "blue" },
+                  { icon: LayoutDashboard, color: "purple" },
+                  { icon: Code2, color: "pink" },
+                  { icon: ShieldCheck, color: "orange" },
+                  { icon: Rocket, color: "green" }
+                ].map((config, i) => {
+                  const step = t.process_page.steps[i];
+                  return (
                   <Reveal key={i}>
                     <div className={`flex items-center justify-between mb-24 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col gap-8 md:gap-0`}>
                       <div className="w-full md:w-5/12 relative">
                          {/* Card Hover Effect Enhanced */}
-                        <SpotlightCard className={`p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border-2 border-slate-100 dark:border-slate-800 relative overflow-hidden transition-all duration-500 hover:border-${item.color}-300 dark:hover:border-${item.color}-800/50`} color={item.color}>
-                          <div className={`absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-${item.color}-600 dark:text-${item.color}-400 transform group-hover:scale-110 duration-500`}>
-                            <item.icon size={120} />
+                        <SpotlightCard className={`p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border-2 border-slate-100 dark:border-slate-800 relative overflow-hidden transition-all duration-500 hover:border-${config.color}-300 dark:hover:border-${config.color}-800/50`} color={config.color}>
+                          <div className={`absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-${config.color}-600 dark:text-${config.color}-400 transform group-hover:scale-110 duration-500`}>
+                            <config.icon size={120} />
                           </div>
-                          <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-100/0 dark:from-slate-800 dark:to-slate-900/0 absolute bottom-4 right-6 z-0 opacity-50 select-none">{item.step}</span>
+                          <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-100/0 dark:from-slate-800 dark:to-slate-900/0 absolute bottom-4 right-6 z-0 opacity-50 select-none">{step.step}</span>
                           <div className="relative z-10">
-                            <div className={`w-14 h-14 bg-${item.color}-100 dark:bg-${item.color}-900/30 rounded-2xl flex items-center justify-center text-${item.color}-600 dark:text-${item.color}-400 mb-6 shadow-md shadow-${item.color}-500/10 group-hover:scale-110 transition-transform`}>
-                              <item.icon size={28} />
+                            <div className={`w-14 h-14 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 shadow-md shadow-${config.color}-500/10 group-hover:scale-110 transition-transform`}>
+                              <config.icon size={28} />
                             </div>
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{item.title}</h3>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{item.desc}</p>
+                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{step.title}</h3>
+                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{step.desc}</p>
                           </div>
                         </SpotlightCard>
                         {i !== 4 && <div className="md:hidden absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full h-24 w-1 bg-gradient-to-b from-slate-200 to-transparent dark:from-slate-800"></div>}
@@ -1502,7 +1444,7 @@ function App() {
                       <div className="w-full md:w-5/12"></div>
                     </div>
                   </Reveal>
-                ))}
+                )})}
               </div>
             </div>
           </div>
@@ -1513,8 +1455,8 @@ function App() {
           <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
               <SectionHeader 
-                title="Biz Kimiz?" 
-                subtitle="Teknolojiyi bir araç değil, bir sanat olarak gören tutkulu bir ekibiz." 
+                title={t.about_page.title} 
+                subtitle={t.about_page.subtitle} 
               />
 
               <div className="grid lg:grid-cols-2 gap-20 items-center mb-32">
@@ -1528,9 +1470,9 @@ function App() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent flex items-end p-10 z-20">
                       <div className="text-white">
-                        <div className="inline-block px-3 py-1 bg-blue-600 rounded-full text-xs font-bold mb-3 shadow-sm">AR-GE MERKEZİ</div>
-                        <h3 className="text-3xl font-bold mb-3">İstanbul, Maslak</h3>
-                        <p className="text-slate-200 font-medium leading-relaxed max-w-md">Global projelerin kodlandığı, inovasyonun kalbinin attığı merkez ofisimiz.</p>
+                        <div className="inline-block px-3 py-1 bg-blue-600 rounded-full text-xs font-bold mb-3 shadow-sm">{t.about_page.office.tag}</div>
+                        <h3 className="text-3xl font-bold mb-3">{t.about_page.office.location}</h3>
+                        <p className="text-slate-200 font-medium leading-relaxed max-w-md">{t.about_page.office.desc}</p>
                       </div>
                     </div>
                   </div>
@@ -1541,28 +1483,28 @@ function App() {
                     <div>
                        <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
                          <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><Rocket size={22}/></span>
-                         Vizyonumuz
+                         {t.about_page.vision.title}
                        </h3>
                        <div className="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
                          <p>
-                           Sarfea Yazılım, işletmelerin dijital potansiyelini en üst düzeye çıkarmak için kuruldu. Hedefimiz, karmaşık iş süreçlerini basit, yönetilebilir ve akıllı yazılımlara dönüştürmektir.
+                           {t.about_page.vision.p1}
                          </p>
                          <p>
-                           Sadece kod yazmıyoruz; geleceğin iş modellerini inşa ediyoruz. Sürdürülebilirlik, ölçeklenebilirlik ve güvenlik, geliştirdiğimiz her satır kodun DNA'sında bulunur.
+                           {t.about_page.vision.p2}
                          </p>
                        </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-6">
                       <SpotlightCard className="p-6 rounded-3xl" color="blue">
-                        <Target className="text-blue-600 mb-4 group-hover:scale-110 transition-transform" size={36} />
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">Sonuç Odaklılık</h4>
-                        <p className="text-slate-600 dark:text-slate-400 font-medium">Ölçülebilir başarı kriterleri.</p>
+                        <Target className="text-blue-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[0].title}</h4>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[0].desc}</p>
                       </SpotlightCard>
                       <SpotlightCard className="p-6 rounded-3xl" color="orange">
                         <Lightbulb className="text-yellow-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">İnovasyon</h4>
-                        <p className="text-slate-600 dark:text-slate-400 font-medium">En yeni teknolojiler.</p>
+                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[1].title}</h4>
+                        <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[1].desc}</p>
                       </SpotlightCard>
                     </div>
                   </div>
@@ -1571,77 +1513,43 @@ function App() {
 
               <div className="mb-32">
                  <SectionHeader 
-                    title="Yolculuğumuz" 
-                    subtitle="Küçük bir ofisten global bir teknoloji şirketine uzanan hikayemiz." 
+                    title={t.about_page.timeline_title} 
+                    subtitle={t.about_page.timeline_subtitle} 
                  />
-                 <Timeline />
+                 <Timeline t={t}/>
               </div>
 
               <div className="mb-24">
-                <h3 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16 tracking-tight">Çözüm Alanlarımız</h3>
+                <h3 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16 tracking-tight">{t.about_page.solutions_area_title}</h3>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {[
-                    { 
-                      icon: Briefcase, 
-                      title: "Kurumsal Yazılım", 
-                      desc: "Şirket içi iş akışlarınızı dijitalleştiren, verimlilik artıran ERP ve CRM sistemleri.",
-                      items: ["İnsan Kaynakları", "Finans Modülleri", "Satış Yönetimi"],
-                      color: "blue" 
-                    },
-                    { 
-                      icon: ShoppingBagIcon, 
-                      title: "E-Ticaret Çözümleri", 
-                      desc: "Online satış kanallarınızı entegre eden, stok ve sipariş yönetimi sunan platformlar.",
-                      items: ["B2B & B2C", "Pazaryeri Sync", "Ödeme Entegrasyonu"],
-                      color: "green" 
-                    },
-                    { 
-                      icon: Smartphone, 
-                      title: "Mobil Ekosistem", 
-                      desc: "iOS ve Android için native ve cross-platform mobil uygulamalar.",
-                      items: ["React Native", "Flutter", "PWA"],
-                      color: "purple" 
-                    },
-                    { 
-                      icon: Cpu, 
-                      title: "Yapay Zeka & ML", 
-                      desc: "Verilerinizden öğrenen, tahmin yapan ve optimize eden akıllı sistemler.",
-                      items: ["Chatbot", "Tahminleme", "NLP"],
-                      color: "indigo" 
-                    },
-                    { 
-                      icon: Wifi, 
-                      title: "IoT & Otomasyon", 
-                      desc: "Cihazlarınızı internete bağlayan, uzaktan kontrol ve izleme imkanı sunan çözümler.",
-                      items: ["Sensör Entegrasyonu", "MQTT", "Real-time Monitoring"],
-                      color: "orange" 
-                    },
-                    { 
-                      icon: ShieldCheck, 
-                      title: "Güvenlik & DevOps", 
-                      desc: "Sisteminizin 7/24 ayakta kalmasını sağlayan altyapı ve güvenlik hizmetleri.",
-                      items: ["Penetrasyon Testi", "CI/CD", "Monitoring"],
-                      color: "red" 
-                    }
-                  ].map((solution, i) => (
+                    { icon: Briefcase, color: "blue" },
+                    { icon: ShoppingBagIcon, color: "green" },
+                    { icon: Smartphone, color: "purple" },
+                    { icon: Cpu, color: "indigo" },
+                    { icon: Wifi, color: "orange" },
+                    { icon: ShieldCheck, color: "red" }
+                  ].map((config, i) => {
+                    const solution = t.about_page.solution_areas[i];
+                    return (
                     <Reveal key={i} delay={i * 80}>
-                      <SpotlightCard className="p-8 rounded-[2rem] h-full flex flex-col" color={solution.color}>
-                        <div className={`w-16 h-16 bg-${solution.color}-100 dark:bg-${solution.color}-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-${solution.color}-500/20`}>
-                          <solution.icon size={32} className={`text-${solution.color}-600 dark:text-${solution.color}-400`} />
+                      <SpotlightCard className="p-8 rounded-[2rem] h-full flex flex-col" color={config.color}>
+                        <div className={`w-16 h-16 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-${config.color}-500/20`}>
+                          <config.icon size={32} className={`text-${config.color}-600 dark:text-${config.color}-400`} />
                         </div>
                         <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{solution.title}</h4>
                         <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed flex-1 font-medium">{solution.desc}</p>
                         <div className="space-y-2">
                           {solution.items.map((item, idx) => (
                             <div key={idx} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                              <div className={`w-1.5 h-1.5 rounded-full bg-${solution.color}-500`}></div>
+                              <div className={`w-1.5 h-1.5 rounded-full bg-${config.color}-500`}></div>
                               <span className="font-medium">{item}</span>
                             </div>
                           ))}
                         </div>
                       </SpotlightCard>
                     </Reveal>
-                  ))}
+                  )})}
                 </div>
               </div>
             </div>
@@ -1653,8 +1561,8 @@ function App() {
           <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
               <SectionHeader 
-                title="Projeyi Başlatalım" 
-                subtitle="Teknik ekibimizle görüşmek için formu doldurun veya bizi arayın." 
+                title={t.contact_page.title} 
+                subtitle={t.contact_page.subtitle} 
               />
 
               <div className="grid lg:grid-cols-5 gap-12 items-start">
@@ -1663,46 +1571,50 @@ function App() {
                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10 pointer-events-none"></div>
                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
                         <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><MessageSquare size={22}/></span>
-                        Talep Formu
+                        {t.contact_page.form.title}
                     </h3>
                     <form className="space-y-6" onSubmit={handleContactSubmit}>
                       <div className="grid md:grid-cols-2 gap-6">
                         <div className="space-y-2">
-                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Adınız Soyadınız</label>
-                          <input required name="name" type="text" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder="Ad Soyad" />
+                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.name}</label>
+                          <input required name="name" type="text" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.name_ph} />
                         </div>
                         <div className="space-y-2">
-                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">E-posta Adresiniz</label>
-                          <input required name="email" type="email" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder="ornek@sirket.com" />
+                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.email}</label>
+                          <input required name="email" type="email" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.email_ph} />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Proje Türü</label>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.type}</label>
                         <div className="relative">
                            <select name="projectType" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium appearance-none cursor-pointer">
-                             <option value="Özel Yazılım / CRM / ERP">Özel Yazılım / CRM / ERP</option>
-                             <option value="Mobil Uygulama Geliştirme">Mobil Uygulama Geliştirme</option>
-                             <option value="Web Sitesi / E-Ticaret">Web Sitesi / E-Ticaret</option>
-                             <option value="Sistem Entegrasyonu">Sistem Entegrasyonu</option>
-                             <option value="Yapay Zeka / IoT">Yapay Zeka / IoT</option>
-                             <option value="Diğer">Diğer</option>
+                             {[
+                               { tr: "Özel Yazılım / CRM / ERP", en: "Custom Software / CRM / ERP" },
+                               { tr: "Mobil Uygulama Geliştirme", en: "Mobile App Development" },
+                               { tr: "Web Sitesi / E-Ticaret", en: "Website / E-Commerce" },
+                               { tr: "Sistem Entegrasyonu", en: "System Integration" },
+                               { tr: "Yapay Zeka / IoT", en: "AI / IoT" },
+                               { tr: "Diğer", en: "Other" }
+                             ].map((opt, i) => (
+                               <option key={i} value={opt[language]}>{opt[language]}</option>
+                             ))}
                            </select>
                            <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
                         </div>
                       </div>
                       <div className="space-y-2">
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">Proje Detayları</label>
-                        <textarea required name="message" rows="5" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium resize-none" placeholder="Projenizden, hedeflerinizden ve ihtiyaç duyduğunuz özelliklerden bahsedin..."></textarea>
+                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.details}</label>
+                        <textarea required name="message" rows="5" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium resize-none" placeholder={t.contact_page.form.details_ph}></textarea>
                       </div>
                       <button disabled={isSubmitting} type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed text-white py-5 rounded-xl font-bold transition-all shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center justify-center gap-3 active:scale-[0.98]">
                         {isSubmitting ? (
                           <>
                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            Gönderiliyor...
+                            {t.contact_page.form.submitting}
                           </>
                         ) : (
                           <>
-                            <Send size={22} /> Teklif İste
+                            <Send size={22} /> {t.contact_page.form.submit}
                           </>
                         )}
                       </button>
@@ -1716,7 +1628,7 @@ function App() {
                       <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500"></div>
                       <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-purple-500/30 transition-colors duration-500"></div>
                       <h3 className="text-2xl font-bold mb-8 relative z-10 flex items-center gap-3">
-                          <AlertCircle size={24} className="text-blue-200"/> İletişim Kanalları
+                          <AlertCircle size={24} className="text-blue-200"/> {t.contact_page.info.title}
                       </h3>
                       <div className="space-y-8 relative z-10">
                         <div className="flex items-start gap-5 group/item">
@@ -1724,7 +1636,7 @@ function App() {
                             <Mail size={24} className="text-blue-100"/>
                           </div>
                           <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">E-posta</p>
+                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.email}</p>
                             <p className="font-bold text-xl">gebcay@gmail.com</p>
                           </div>
                         </div>
@@ -1733,7 +1645,7 @@ function App() {
                             <Phone size={24} className="text-blue-100"/>
                           </div>
                           <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">Telefon</p>
+                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.phone}</p>
                             <p className="font-bold text-xl">+90 544 572 26 34</p>
                           </div>
                         </div>
@@ -1742,8 +1654,8 @@ function App() {
                             <Globe size={24} className="text-blue-100"/>
                           </div>
                           <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">Merkez Ofis</p>
-                            <p className="font-bold text-lg leading-tight">Ovacık, Yozgat Blv. No: 20, 06280 Keçiören/Ankara</p>
+                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hq}</p>
+                            <p className="font-bold text-lg leading-tight">{t.contact_page.info.address}</p>
                           </div>
                         </div>
                         <div className="flex items-start gap-5 group/item">
@@ -1751,8 +1663,8 @@ function App() {
                             <Clock size={24} className="text-blue-100"/>
                           </div>
                           <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">Çalışma Saatleri</p>
-                            <p className="font-bold text-lg leading-tight">Pzt - Cum: 09:00 - 18:00</p>
+                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hours_label}</p>
+                            <p className="font-bold text-lg leading-tight">{t.contact_page.info.hours}</p>
                           </div>
                         </div>
                       </div>
@@ -1778,7 +1690,7 @@ function App() {
                           rel="noopener noreferrer"
                           className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 hover:scale-105 transition-transform"
                         >
-                          <ExternalLink size={16} /> Yol Tarifi Al
+                          <ExternalLink size={16} /> {t.contact_page.info.directions}
                         </a>
                       </div>
                     </div>
@@ -1796,7 +1708,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 font-sans selection:bg-purple-500/30 dark:selection:bg-blue-500/30">
-      <CookieConsent />
+      <CookieConsent t={t} />
       <motion.div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left z-[100] shadow-[0_1px_8px_rgba(59,130,246,0.5)]" style={{ scaleX }} />
       
       {/* Scroll to Top Button */}
@@ -1815,11 +1727,11 @@ function App() {
       </AnimatePresence>
 
       <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} />}
+        {toast && <Toast message={toast} onClose={() => setToast(null)} t={t} />}
       </AnimatePresence>
 
       <AnimatePresence>
-        {isCalculatorOpen && <ProjectCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} onShowToast={(msg) => setToast(msg)} />}
+        {isCalculatorOpen && <ProjectCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} onShowToast={(msg) => setToast(msg)} t={t} />}
       </AnimatePresence>
 
       <Navbar 
@@ -1827,7 +1739,10 @@ function App() {
         setActivePage={setActivePage} 
         isScrolled={isScrolled} 
         darkMode={darkMode} 
-        setDarkMode={setDarkMode} 
+        setDarkMode={setDarkMode}
+        language={language}
+        setLanguage={setLanguage}
+        t={t} 
       />
 
       <AnimatePresence mode="wait">
@@ -1842,7 +1757,7 @@ function App() {
         </motion.main>
       </AnimatePresence>
 
-      <Newsletter />
+      <Newsletter t={t} />
       <footer className="bg-slate-950 text-white py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] opacity-20 pointer-events-none"></div>
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-slate-900 via-blue-900/50 to-slate-900"></div>
@@ -1854,30 +1769,30 @@ function App() {
                 <span className="text-2xl font-black tracking-tighter">SARFEA<span className="text-blue-500">.</span></span>
               </div>
               <p className="text-slate-400 max-w-sm leading-relaxed font-medium">
-                Geleceği kodluyoruz. İşletmenizi dijital dünyada bir adım öne taşıyacak yenilikçi ve sürdürülebilir yazılım çözümleri üretiyoruz.
+                {t.footer.slogan}
               </p>
             </div>
             <div>
-              <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2"><ChevronRight size={18} className="text-blue-500"/> Site Haritası</h4>
+              <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2"><ChevronRight size={18} className="text-blue-500"/> {t.footer.sitemap}</h4>
               <ul className="space-y-4 text-slate-400 font-medium">
-                <li><button onClick={() => setActivePage('home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Anasayfa</button></li>
-                <li><button onClick={() => setActivePage('solutions')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Teknolojiler</button></li>
-                <li><button onClick={() => setActivePage('process')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Süreç</button></li>
-                <li><button onClick={() => setActivePage('about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> Kurumsal</button></li>
+                <li><button onClick={() => setActivePage('home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.home}</button></li>
+                <li><button onClick={() => setActivePage('solutions')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.solutions}</button></li>
+                <li><button onClick={() => setActivePage('process')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.process}</button></li>
+                <li><button onClick={() => setActivePage('about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.about}</button></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2"><ChevronRight size={18} className="text-blue-500"/> Kurumsal</h4>
+              <h4 className="font-bold text-lg mb-6 text-white flex items-center gap-2"><ChevronRight size={18} className="text-blue-500"/> {t.footer.corporate}</h4>
               <ul className="space-y-4 text-slate-400 font-medium">
-                <li><button className="hover:text-blue-400 transition-colors">Gizlilik Politikası</button></li>
-                <li><button className="hover:text-blue-400 transition-colors">Kullanım Şartları</button></li>
-                <li><button className="hover:text-blue-400 transition-colors">KVKK Aydınlatma</button></li>
-                <li><button className="hover:text-blue-400 transition-colors">Kariyer</button></li>
+                <li><button className="hover:text-blue-400 transition-colors">{t.footer.privacy}</button></li>
+                <li><button className="hover:text-blue-400 transition-colors">{t.footer.terms}</button></li>
+                <li><button className="hover:text-blue-400 transition-colors">{t.footer.kvkk}</button></li>
+                <li><button className="hover:text-blue-400 transition-colors">{t.footer.careers}</button></li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-slate-800/50 flex flex-col md:flex-row justify-between items-center gap-6 text-slate-500 text-sm font-medium">
-            <p>&copy; 2024 Sarfea Yazılım Teknolojileri A.Ş. Tüm hakları saklıdır.</p>
+            <p>{t.footer.rights}</p>
             <div className="flex items-center gap-4">
               <button className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all group"><span className="font-bold">In</span></button>
               <button className="w-10 h-10 bg-slate-900 rounded-xl flex items-center justify-center hover:bg-blue-400 hover:text-white transition-all group"><span className="font-bold">Tw</span></button>
