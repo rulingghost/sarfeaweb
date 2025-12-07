@@ -1065,7 +1065,7 @@ const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative block mt-16 lg:mt-0 lg:block perspective-1000"
+            className="relative hidden lg:block perspective-1000"
           >
             {/* 3D Tilt Wrapper Ekledim */}
             <TiltContainer>
