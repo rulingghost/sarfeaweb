@@ -410,9 +410,9 @@ const AdvancedCRMPreview = ({ t }) => {
         </div>
 
         {/* Dashboard Content Grid */}
-        <div className="p-6 grid grid-cols-3 gap-4 overflow-hidden relative">
+        <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-4 overflow-hidden relative">
            {/* Card 1: Revenue */}
-           <div className="col-span-2 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50 relative overflow-hidden group">
+           <div className="col-span-1 md:col-span-2 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50 relative overflow-hidden group">
               <div className="flex justify-between items-start mb-4">
                  <div>
                     <h5 className="text-slate-400 mb-1">{t.crm_preview.total_revenue}</h5>
@@ -464,7 +464,7 @@ const AdvancedCRMPreview = ({ t }) => {
            </div>
 
            {/* Card 3: Recent Integrations */}
-           <div className="col-span-3 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50">
+           <div className="col-span-1 md:col-span-3 bg-[#1e293b] rounded-xl p-4 border border-slate-700/50">
               <div className="flex justify-between items-center mb-3">
                  <h5 className="text-slate-400 font-semibold">{t.crm_preview.recent_integrations}</h5>
                  <button className="text-blue-400 hover:text-blue-300">{t.crm_preview.all}</button>
@@ -949,6 +949,34 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
                      </div>
                   </button>
               </div>
+
+              {/* Mobile Language Selector */}
+              <div className="bg-slate-50 dark:bg-slate-900/50 rounded-2xl mt-2 p-4">
+                  <span className="text-slate-700 dark:text-slate-300 font-bold flex items-center gap-2 mb-3 text-sm">
+                    <Globe size={18}/> Dil Seçimi / Language
+                  </span>
+                  <div className="grid grid-cols-4 gap-2">
+                    {[
+                      { code: 'tr', label: 'TR' },
+                      { code: 'en', label: 'EN' },
+                      { code: 'ar', label: 'AR' },
+                      { code: 'fr', label: 'FR' },
+                      { code: 'ku', label: 'KU' },
+                      { code: 'de', label: 'DE' },
+                      { code: 'ru', label: 'RU' },
+                      { code: 'ckb', label: 'CKB' }
+                    ].map((lang) => (
+                      <button
+                        key={lang.code}
+                        onClick={() => { setLanguage(lang.code); setIsOpen(false); }}
+                        className={`py-2 rounded-lg text-xs font-bold transition-colors ${language === lang.code ? 'bg-blue-600 text-white' : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700'}`}
+                      >
+                        {lang.label}
+                      </button>
+                    ))}
+                  </div>
+              </div>
+
               <button onClick={() => handleNavClick('contact')} className="w-full mt-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-4 rounded-2xl font-bold shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
                 <Zap size={18} fill="currentColor"/> {t.navbar.startProject}
               </button>
@@ -1037,7 +1065,7 @@ const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
-            className="relative hidden lg:block perspective-1000"
+            className="relative block mt-16 lg:mt-0 lg:block perspective-1000"
           >
             {/* 3D Tilt Wrapper Ekledim */}
             <TiltContainer>
