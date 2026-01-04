@@ -13,6 +13,7 @@ import {
   Boxes, GitBranch, Terminal, Wifi, Lock, Fingerprint, MousePointer2, ArrowLeft, MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import { translations } from './translations';
 
 // --- YENİ ETKİLEŞİMLİ BİLEŞENLER ---
@@ -855,16 +856,18 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
         </div>
 
         <div className="hidden md:flex items-center gap-8">
-          {['home', 'solutions', 'process', 'about', 'contact'].map((page) => (
+          {['home', 'solutions', 'process', 'about', 'projects', 'blog', 'contact'].map((page) => (
             <button 
               key={page}
               onClick={() => handleNavClick(page)}
-              className={`text-[13px] font-bold uppercase tracking-widest transition-all relative group py-2 ${activePage === page ? 'text-blue-600 dark:text-blue-400' : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'}`}
+              className={`relative font-medium text-sm tracking-wide transition-colors duration-300 group ${activePage === page ? 'text-blue-600 dark:text-blue-400 font-bold' : 'text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400'}`}
             >
               {page === 'home' ? t.navbar.home : 
                page === 'solutions' ? t.navbar.solutions : 
                page === 'process' ? t.navbar.process :
-               page === 'about' ? t.navbar.about : t.navbar.contact}
+               page === 'about' ? t.navbar.about : 
+               page === 'projects' ? t.navbar.projects : 
+               page === 'blog' ? t.navbar.blog : t.navbar.contact}
               <span className={`absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 transform origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100 ${activePage === page ? 'scale-x-100' : ''}`}></span>
             </button>
           ))}
@@ -926,7 +929,7 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
             className="absolute top-full left-0 w-full bg-white/95 dark:bg-slate-950/95 border-t border-slate-100 dark:border-slate-800 shadow-2xl md:hidden overflow-hidden backdrop-blur-xl"
           >
             <div className="p-4 space-y-2">
-              {['home', 'solutions', 'process', 'about', 'contact'].map((page) => (
+              {['home', 'solutions', 'process', 'about', 'projects', 'blog', 'contact'].map((page) => (
                 <button 
                   key={page} 
                   onClick={() => handleNavClick(page)} 
@@ -936,7 +939,9 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
                     {page === 'home' ? t.navbar.home : 
                      page === 'solutions' ? t.navbar.solutions : 
                      page === 'process' ? t.navbar.process :
-                     page === 'about' ? t.navbar.about : t.navbar.contact}
+                     page === 'about' ? t.navbar.about : 
+                     page === 'projects' ? t.navbar.projects : 
+                     page === 'blog' ? t.navbar.blog : t.navbar.contact}
                     {activePage === page && <ChevronRight size={18} />}
                   </span>
                 </button>
@@ -988,7 +993,8 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
   );
 };
 
-const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
+
+const Hero = ({ navigateTo, onOpenCalculator, t }) => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -1114,6 +1120,161 @@ const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
     </div>
   );
 };
+
+// Dummy components for refactored renderContent
+
+const StatsSection = ({ t }) => (
+  <section className="py-24 bg-white dark:bg-slate-900 relative z-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeader 
+        title={t.stats_section.title} 
+        subtitle={t.stats_section.subtitle} 
+      />
+      <LogoMarquee />
+    </div>
+    <div className="py-32 bg-slate-50 dark:bg-slate-950/50 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05]"></div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20 items-center">
+          <Reveal>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8 tracking-tight leading-tight">
+              {t.stats_section.main_title_prefix} <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">{t.stats_section.main_title_suffix}</span>
+            </h2>
+            <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed font-medium">
+              {t.stats_section.description}
+            </p>
+            
+            <div className="grid grid-cols-2 gap-8">
+              <SpotlightCard className="p-6 rounded-3xl" color="blue">
+                <div className="text-4xl font-black text-blue-600 dark:text-blue-500 mb-2"><CountUp end={45} />+</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[0].label}</div>
+              </SpotlightCard>
+              
+              <SpotlightCard className="p-6 rounded-3xl" color="purple">
+                <div className="text-4xl font-black text-purple-600 dark:text-purple-500 mb-2"><CountUp end={120} />+</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[1].label}</div>
+              </SpotlightCard>
+              
+              <SpotlightCard className="p-6 rounded-3xl" color="green">
+                <div className="text-4xl font-black text-green-600 dark:text-green-500 mb-2"><CountUp end={99} />%</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[2].label}</div>
+              </SpotlightCard>
+              
+              <SpotlightCard className="p-6 rounded-3xl" color="orange">
+                <div className="text-4xl font-black text-orange-600 dark:text-orange-500 mb-2"><CountUp end={24} />/7</div>
+                <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[3].label}</div>
+              </SpotlightCard>
+            </div>
+          </Reveal>
+          
+          <Reveal delay={200}>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] transform rotate-3 opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-500"></div>
+              <img 
+                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                alt="Team" 
+                className="relative rounded-[2.5rem] shadow-2xl border-4 border-white dark:border-slate-800 z-10 transform transition-transform duration-500 group-hover:rotate-1 group-hover:scale-[1.02]"
+              />
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </div>
+  </section>
+);
+const CRMPreview = ({ t }) => (
+  <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeader 
+        title="Gelişmiş CRM Çözümleri" 
+        subtitle="İşletmenizi bir üst seviyeye taşıyın" 
+      />
+      <div className="relative hidden lg:block perspective-1000">
+        <TiltContainer>
+          <div className="relative z-10 bg-[#0f172a] rounded-[1.5rem] p-0 shadow-2xl shadow-blue-900/40 border-4 border-slate-800 transition-all duration-300 group overflow-hidden">
+            <AdvancedCRMPreview t={t} />
+          </div>
+        </TiltContainer>
+      </div>
+    </div>
+  </section>
+);
+const TechStack = ({ t }) => (
+  <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeader 
+        title={t.tech_stack.title} 
+        subtitle={t.tech_stack.subtitle} 
+      />
+      <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
+        {[
+          { name: "React & Next.js", icon: Code2, desc: t.tech_stack.items[0].desc, color: "blue" },
+          { name: "Node.js & Python", icon: Server, desc: t.tech_stack.items[1].desc, color: "green" },
+          { name: "AWS & Azure", icon: Cloud, desc: t.tech_stack.items[2].desc, color: "orange" },
+          { name: "Docker & K8s", icon: Boxes, desc: t.tech_stack.items[3].desc, color: "cyan" },
+          { name: "PostgreSQL & MongoDB", icon: Database, desc: t.tech_stack.items[4].desc, color: "purple" },
+          { name: "CI/CD Pipeline", icon: GitBranch, desc: t.tech_stack.items[5].desc, color: "pink" },
+          { name: "Microservices", icon: Layers, desc: t.tech_stack.items[6].desc, color: "indigo" },
+          { name: "REST & GraphQL", icon: Terminal, desc: t.tech_stack.items[7].desc, color: "teal" }
+        ].map((tech, i) => (
+          <Reveal key={i} delay={i * 50}>
+            <SpotlightCard className={`p-6 rounded-2xl h-full flex flex-col items-center text-center group cursor-default`} color={tech.color}>
+              <div className={`w-16 h-16 bg-${tech.color}-100 dark:bg-${tech.color}-900/30 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-${tech.color}-500/20`}>
+                <tech.icon size={32} className={`text-${tech.color}-600 dark:text-${tech.color}-400`} />
+              </div>
+              <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{tech.name}</h4>
+              <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">{tech.desc}</p>
+            </SpotlightCard>
+          </Reveal>
+        ))}
+      </div>
+    </div>
+  </section>
+);
+const FAQ = ({ t }) => (
+  <section className="py-32 bg-slate-50 dark:bg-slate-950/50">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionHeader 
+        title={t.faq.title} 
+        subtitle={t.faq.subtitle} 
+      />
+      <FAQAccordion faqs={t.faq.questions} />
+    </div>
+  </section>
+);
+const CTA = ({ setActivePage, t }) => (
+  <section className="py-32 relative overflow-hidden">
+    <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800"></div>
+    <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/10 to-transparent"></div>
+    <motion.div 
+       animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
+       transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+       className="absolute -top-1/2 -left-1/2 w-[100%] h-[100%] bg-blue-400/20 rounded-full blur-[150px]"
+    />
+    <motion.div 
+       animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
+       transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+       className="absolute -bottom-1/2 -right-1/2 w-[100%] h-[100%] bg-purple-400/20 rounded-full blur-[150px]"
+    />
+
+    <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+      <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight leading-tight drop-shadow-sm">
+        {t.cta.title}
+      </h2>
+      <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-sm">
+        {t.cta.description}
+      </p>
+      <button 
+        onClick={() => setActivePage('contact')}
+        className="bg-white text-blue-600 px-12 py-5 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-2xl shadow-blue-900/30 hover:shadow-blue-900/50 hover:-translate-y-1 active:scale-[0.98] flex items-center gap-3 mx-auto group"
+      >
+        {t.cta.button} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform"/>
+      </button>
+    </div>
+  </section>
+);
 
 // --- WHATSAPP BUTTON ---
 const WhatsAppButton = ({ t }) => {
@@ -1280,6 +1441,300 @@ const ProjectsShowcase = ({ onSelectProject, t }) => {
   );
 };
 
+// --- SEO COMPONENT ---
+const SEO = ({ title, description, lang = 'tr' }) => {
+  return (
+    <Helmet>
+      <title>{title} | Sarfea Software</title>
+      <meta name="description" content={description} />
+      <meta property="og:title" content={`${title} | Sarfea Software`} />
+      <meta property="og:description" content={description} />
+      <meta property="og:type" content="website" />
+      <meta name="twitter:card" content="summary_large_image" />
+      <html lang={lang} />
+    </Helmet>
+  );
+};
+
+// --- BLOG SHOWCASE ---
+const blogData = [
+  {
+    id: 1,
+    title: {
+      tr: "Yapay Zeka Destekli ERP Sistemleri: Geleceğin İş Modeli",
+      en: "AI-Powered ERP Systems: The Business Model of the Future",
+      ar: "أنظمة تخطيط موارد المؤسسات المدعومة بالذكاء الاصطناعي: نموذج عمل المستقبل"
+    },
+    category: "ai",
+    image: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    excerpt: {
+      tr: "Geleneksel ERP sistemleri yerini, tahmine dayalı analiz yapabilen ve kararlar önerebilen AI tabanlı yapılara bırakıyor.",
+      en: "Traditional ERP systems are being replaced by AI-based structures capable of predictive analysis and decision suggestions.",
+      ar: "يتم استبدال أنظمة تخطيط موارد المؤسسات التقليدية بهياكل قائمة على الذكاء الاصطناعي قادرة على التحليل التنبؤي واقتراحات القرار."
+    },
+    content: {
+      tr: `
+        <p>İş dünyası hızla değişiyor ve bu değişimin merkezinde Yapay Zeka (AI) ve Kurumsal Kaynak Planlama (ERP) sistemlerinin entegrasyonu yer alıyor. Geleneksel ERP sistemleri, veri kaydı ve raporlama konusunda mükemmel olsa da, günümüzün rekabetçi piyasasında artık yeterli değil.</p>
+        
+        <h3>Neden AI Destekli ERP?</h3>
+        <p>Yapay zeka, ERP sistemlerine "düşünme" yeteneği kazandırıyor. Sadece geçmiş verileri raporlamakla kalmıyor, geleceği tahmin ediyor. Stok optimizasyonu, talep tahmini ve müşteri davranış analizi gibi konularda %95'e varan doğruluk oranları sunuyor.</p>
+        
+        <h3>Temel Avantajlar</h3>
+        <ul>
+          <li><strong>Otomatik Veri Girişi:</strong> Manuel hataları ortadan kaldırır.</li>
+          <li><strong>Tahmine Dayalı Bakım:</strong> Üretim bandındaki arızaları önceden tespit eder.</li>
+          <li><strong>Akıllı Finans:</strong> Nakit akışını optimize eder ve riskleri analiz eder.</li>
+        </ul>
+        
+        <p>Sarfea Software olarak, geliştirdiğimiz ERP çözümlerinde en son AI teknolojilerini kullanarak müşterilerimize rekabet avantajı sağlıyoruz.</p>
+      `,
+      en: `
+        <p>The business world is changing rapidly, and at the center of this change is the integration of Artificial Intelligence (AI) and Enterprise Resource Planning (ERP) systems. While traditional ERP systems excel at data recording and reporting, they are no longer sufficient in today's competitive market.</p>
+        
+        <h3>Why AI-Powered ERP?</h3>
+        <p>Artificial intelligence gives ERP systems the ability to "think". It not only reports past data but predicts the future. It offers accuracy rates of up to 95% in areas such as inventory optimization, demand forecasting, and customer behavior analysis.</p>
+        
+        <h3>Key Advantages</h3>
+        <ul>
+          <li><strong>Automated Data Entry:</strong> Eliminates manual errors.</li>
+          <li><strong>Predictive Maintenance:</strong> Detects faults on the production line in advance.</li>
+          <li><strong>Smart Finance:</strong> Optimizes cash flow and analyzes risks.</li>
+        </ul>
+        
+        <p>At Sarfea Software, we provide our customers with a competitive advantage by using the latest AI technologies in the ERP solutions we develop.</p>
+      `,
+      ar: `
+        <p>يتغير عالم الأعمال بسرعة، وفي مركز هذا التغيير تكامل الذكاء الاصطناعي (AI) وأنظمة تخطيط موارد المؤسسات (ERP). بينما تتفوق أنظمة ERP التقليدية في تسجيل البيانات وإعداد التقارير، إلا أنها لم تعد كافية في السوق التنافسي اليوم.</p>
+        
+        <h3>لماذا ERP المدعوم بالذكاء الاصطناعي؟</h3>
+        <p>يمنح الذكاء الاصطناعي أنظمة ERP القدرة على "التفكير". فهو لا يبلغ عن البيانات السابقة فحسب بل يتنبأ بالمستقبل. يقدم معدلات دقة تصل إلى 95٪ في مجالات مثل تحسين المخزون وتوقع الطلب وتحليل سلوك العملاء.</p>
+        
+        <h3>المزايا الرئيسية</h3>
+        <ul>
+          <li><strong>إدخال البيانات الآلي:</strong> يزيل الأخطاء اليدوية.</li>
+          <li><strong>الصيانة التنبؤية:</strong> يكتشف الأعطال في خط الإنتاج مسبقًا.</li>
+          <li><strong>التمويل الذكي:</strong> يحسن التدفق النقدي ويحلل المخاطر.</li>
+        </ul>
+        
+        <p>في Sarfea Software، نقدم لعملائنا ميزة تنافسية باستخدام أحدث تقنيات الذكاء الاصطناعي في حلول ERP التي نطورها.</p>
+      `
+    },
+    date: "14.01.2024",
+    readTime: "5 min"
+  },
+  {
+    id: 2,
+    title: {
+      tr: "Mikroservis Mimarisine Geçiş Rehberi",
+      en: "Microservices Architecture Migration Guide",
+      ar: "دليل الانتقال إلى هندسة الخدمات المصغرة"
+    },
+    category: "dev",
+    image: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    excerpt: {
+      tr: "Monolitik yapıdan mikroservislere geçerken dikkat edilmesi gerekenler, avantajlar ve karşılaşılabilecek zorluklar.",
+      en: "Things to consider, advantages, and challenges when moving from monolithic structure to microservices.",
+      ar: "الأشياء التي يجب مراعاتها والمزايا والتحديات عند الانتقال من الهيكل الموحد إلى الخدمات المصغرة."
+    },
+    content: {
+      tr: `
+        <p>Yazılım dünyasında ölçeklenebilirlik denince akla ilk gelen çözüm mikroservis mimarisidir. Ancak monolitik bir uygulamayı parçalara ayırmak, dikkatli planlama gerektiren zorlu bir süreçtir.</p>
+        
+        <h3>Ne Zaman Geçilmeli?</h3>
+        <p>Eğer uygulamanız çok büyüdüyse, ekipler birbirini beklemek zorunda kalıyorsa ve küçük bir değişiklik için tüm sistemi deploy etmeniz gerekiyorsa, değişim zamanı gelmiş demektir.</p>
+        
+        <h3>Geçiş Stratejileri</h3>
+        <ol>
+          <li><strong>Strangler Fig Pattern:</strong> Sistemi parça parça yenileyin.</li>
+          <li><strong>Domain Driven Design (DDD):</strong> Servis sınırlarını iş alanlarına göre belirleyin.</li>
+          <li><strong>DevOps Kültürü:</strong> Otomasyon olmadan mikroservis yönetilemez.</li>
+        </ol>
+        
+        <p>Doğru uygulandığında, mikroservisler geliştirme hızınızı 10 kata kadar artırabilir.</p>
+      `,
+      en: `
+        <p>When it comes to scalability in the software world, the first solution that comes to mind is microservices architecture. However, breaking down a monolithic application fits parts is a challenging process that requires careful planning.</p>
+        
+        <h3>When to Switch?</h3>
+        <p>If your application has grown too large, teams have to wait for each other, and you have to deploy the entire system for a small change, it's time for a change.</p>
+        
+        <h3>Migration Strategies</h3>
+        <ol>
+          <li><strong>Strangler Fig Pattern:</strong> Renew the system piece by piece.</li>
+          <li><strong>Domain Driven Design (DDD):</strong> Determine service boundaries based on business domains.</li>
+          <li><strong>DevOps Culture:</strong> Microservices cannot be managed without automation.</li>
+        </ol>
+        
+        <p>When implemented correctly, microservices can increase your development speed up to 10 times.</p>
+      `,
+      ar: `
+        <p>عندما يتعلق الأمر بقابلية التوسع في عالم البرمجيات، فإن الحل الأول الذي يتبادر إلى الذهن هو هندسة الخدمات المصغرة. ومع ذلك، فإن تقسيم تطبيق موحد إلى أجزاء هو عملية صعبة تتطلب تخطيطًا دقيقًا.</p>
+        
+        <h3>متى يجب التبديل؟</h3>
+        <p>إذا نما تطبيقك بشكل كبير جدًا، وتضطر الفرق لانتظار بعضها البعض، ويتعين عليك نشر النظام بأكمله لإجراء تغيير صغير، فقد حان وقت التغيير.</p>
+        
+        <h3>استراتيجيات الانتقال</h3>
+        <ol>
+          <li><strong>Strangler Fig Pattern:</strong> جدد النظام قطعة قطعة.</li>
+          <li><strong>Domain Driven Design (DDD):</strong> حدد حدود الخدمة بناءً على مجالات العمل.</li>
+          <li><strong>ثقافة DevOps:</strong> لا يمكن إدارة الخدمات المصغرة بدون الأتمتة.</li>
+        </ol>
+        
+        <p>عند تنفيذها بشكل صحيح، يمكن للخدمات المصغرة زيادة سرعة التطوير لديك حتى 10 مرات.</p>
+      `
+    },
+    date: "02.02.2024",
+    readTime: "8 min"
+  },
+  {
+    id: 3,
+    title: {
+      tr: "2024 Web Geliştirme Trendleri",
+      en: "2024 Web Development Trends",
+      ar: "اتجاهات تطوير الويب لعام 2024"
+    },
+    category: "trend",
+    image: "https://images.unsplash.com/photo-1504639725590-34d0984388bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    excerpt: {
+      tr: "Server Components, AI kodlama asistanları ve WebAssembly'nin yükselişi. Bu yıl bizi neler bekliyor?",
+      en: "Rise of Server Components, AI coding assistants, and WebAssembly. What awaits us this year?",
+      ar: "ظهور مكونات الخادم، ومساعدي البرمجة بالذكاء الاصطناعي، و WebAssembly. ماذا ينتظرنا هذا العام؟"
+    },
+    content: {
+      tr: `
+        <p>Web teknolojileri baş döndürücü bir hızla gelişiyor. 2024 yılında, frontend ve backend arasındaki çizgilerin daha da bulanıklaştığını görüyoruz.</p>
+        
+        <h3>Öne Çıkan Trendler</h3>
+        <ul>
+          <li><strong>React Server Components:</strong> İstemci tarafındaki JavaScript yükünü azaltarak performansı artırıyor.</li>
+          <li><strong>AI Destekli Geliştirme:</strong> Copilot ve benzeri araçlar artık lüks değil, standart haline geliyor.</li>
+          <li><strong>WebAssembly (Wasm):</strong> Tarayıcıda yüksek performanslı uygulamalar için yeni standart.</li>
+        </ul>
+        
+        <p>Geliştiricilerin bu teknolojilere adapte olması, rekabette geride kalmamaları için kritik öneme sahip.</p>
+      `,
+      en: `
+        <p>Web technologies are developing at a dizzying pace. In 2024, we see the lines between frontend and backend blurring even more.</p>
+        
+        <h3>Emerging Trends</h3>
+        <ul>
+          <li><strong>React Server Components:</strong> Increases performance by reducing client-side JavaScript load.</li>
+          <li><strong>AI-Powered Development:</strong> Copilot and similar tools are no longer a luxury but becoming standard.</li>
+          <li><strong>WebAssembly (Wasm):</strong> The new standard for high-performance applications in the browser.</li>
+        </ul>
+        
+        <p>Adapting to these technologies is critical for developers not to fall behind in the competition.</p>
+      `,
+      ar: `
+        <p>تتطور تقنيات الويب بسرعة مذهلة. في عام 2024، نرى الخطوط بين الواجهة الأمامية والخلفية غير واضحة أكثر.</p>
+        
+        <h3>الاتجاهات الناشئة</h3>
+        <ul>
+          <li><strong>مكونات خادم React:</strong> يزيد الأداء عن طريق تقليل حمل JavaScript من جانب العميل.</li>
+          <li><strong>التطوير المدعوم بالذكاء الاصطناعي:</strong> لم تعد Copilot والأدوات المماثلة رفاهية بل أصبحت معيارًا.</li>
+          <li><strong>WebAssembly (Wasm):</strong> المعيار الجديد للتطبيقات عالية الأداء في المتصفح.</li>
+        </ul>
+        
+        <p>يعد التكيف مع هذه التقنيات أمرًا بالغ الأهمية للمطورين حتى لا يتخلفوا عن المنافسة.</p>
+      `
+    },
+    date: "28.02.2024",
+    readTime: "4 min"
+  }
+];
+
+const BlogPostDetail = ({ post, onBack, t, language }) => {
+  return (
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0 }}
+      className="pt-28 min-h-screen bg-white dark:bg-slate-950 transition-colors duration-500"
+    >
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <button 
+          onClick={onBack}
+          className="flex items-center gap-2 text-slate-500 hover:text-blue-600 dark:text-slate-400 dark:hover:text-blue-400 transition-colors mb-8 font-bold"
+        >
+          <ArrowLeft size={20} /> {language === 'en' ? 'Back to Blog' : language === 'ar' ? 'العودة إلى المدونة' : 'Bloga Dön'}
+        </button>
+
+        <article>
+          <div className="relative h-[400px] mb-10 rounded-[2.5rem] overflow-hidden shadow-2xl">
+            <img src={post.image} alt={post.title[language]} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
+            <div className="absolute bottom-10 left-10 right-10 text-white">
+              <span className="bg-blue-600 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider mb-4 inline-block">
+                {t.blog_page.categories[post.category]}
+              </span>
+              <h1 className="text-3xl md:text-5xl font-black leading-tight mb-4">
+                {post.title[language]}
+              </h1>
+              <div className="flex items-center gap-6 text-sm font-bold text-slate-300">
+                <span>{post.date}</span>
+                <span className="w-1 h-1 rounded-full bg-slate-300"></span>
+                <span>{post.readTime}</span>
+              </div>
+            </div>
+          </div>
+
+          <div 
+            className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-li:text-slate-600 dark:prose-li:text-slate-300"
+            dangerouslySetInnerHTML={{ __html: post.content[language] }}
+          ></div>
+        </article>
+      </div>
+    </motion.div>
+  );
+};
+
+const BlogShowcase = ({ t, language, onSelectPost }) => {
+  return (
+    <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <SectionHeader 
+            title={t.blog_page.title} 
+            subtitle={t.blog_page.subtitle} 
+          />
+          
+          <div className="grid md:grid-cols-3 gap-8 mt-16">
+            {blogData.map((post, i) => (
+              <Reveal key={post.id} delay={i * 100}>
+                <article className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all group flex flex-col h-full border border-slate-100 dark:border-slate-800">
+                    <div className="h-48 overflow-hidden relative">
+                       <img src={post.image} alt={post.title[language]} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                       <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
+                         {t.blog_page.categories[post.category]}
+                       </div>
+                    </div>
+                    <div className="p-6 flex-1 flex flex-col">
+                       <div className="flex items-center gap-4 text-xs text-slate-400 mb-3 font-medium">
+                          <span>{post.date}</span>
+                          <span>•</span>
+                          <span>{post.readTime}</span>
+                       </div>
+                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                         {post.title[language]}
+                       </h3>
+                       <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-1">
+                         {post.excerpt[language]}
+                       </p>
+                       <button 
+                         onClick={() => onSelectPost(post)}
+                         className="text-blue-600 dark:text-blue-400 font-bold text-sm flex items-center gap-2 group-hover:gap-3 transition-all"
+                       >
+                          {t.blog_page.read_more} <ArrowRight size={16} />
+                       </button>
+                    </div>
+                </article>
+              </Reveal> 
+            ))}
+          </div>
+       </div>
+    </div>
+  );
+};
+
 // --- MAIN APP COMPONENT ---
 function App() {
   const [activePage, setActivePage] = useState('home');
@@ -1287,6 +1742,7 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null); // Project Modal State
+  const [selectedBlogPost, setSelectedBlogPost] = useState(null); // Blog Detail State
   const [toast, setToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -1370,532 +1826,472 @@ function App() {
     }
   };
 
+  // --- RENDER CONTENT ---
   const renderContent = () => {
     switch(activePage) {
       case 'home':
         return (
           <>
-            <HeroSection navigateTo={setActivePage} onOpenCalculator={() => setIsCalculatorOpen(true)} t={t} />
-            
-            <section className="py-24 bg-white dark:bg-slate-900 relative z-10">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SectionHeader 
-                  title={t.stats_section.title} 
-                  subtitle={t.stats_section.subtitle} 
-                />
-                <LogoMarquee />
-              </div>
-            </section>
-
-            <section className="py-32 bg-slate-50 dark:bg-slate-950/50 relative overflow-hidden">
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05]"></div>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div className="grid lg:grid-cols-2 gap-20 items-center">
-                  <Reveal>
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8 tracking-tight leading-tight">
-                      {t.stats_section.main_title_prefix} <br/>
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">{t.stats_section.main_title_suffix}</span>
-                    </h2>
-                    <p className="text-xl text-slate-600 dark:text-slate-400 mb-12 leading-relaxed font-medium">
-                      {t.stats_section.description}
-                    </p>
-                    
-                    <div className="grid grid-cols-2 gap-8">
-                      <SpotlightCard className="p-6 rounded-3xl" color="blue">
-                        <div className="text-4xl font-black text-blue-600 dark:text-blue-500 mb-2"><CountUp end={45} />+</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[0].label}</div>
-                      </SpotlightCard>
-                      
-                      <SpotlightCard className="p-6 rounded-3xl" color="purple">
-                        <div className="text-4xl font-black text-purple-600 dark:text-purple-500 mb-2"><CountUp end={120} />+</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[1].label}</div>
-                      </SpotlightCard>
-                      
-                      <SpotlightCard className="p-6 rounded-3xl" color="green">
-                        <div className="text-4xl font-black text-green-600 dark:text-green-500 mb-2"><CountUp end={99} />%</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[2].label}</div>
-                      </SpotlightCard>
-                      
-                      <SpotlightCard className="p-6 rounded-3xl" color="orange">
-                        <div className="text-4xl font-black text-orange-600 dark:text-orange-500 mb-2"><CountUp end={24} />/7</div>
-                        <div className="text-sm font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t.stats_section.cards[3].label}</div>
-                      </SpotlightCard>
-                    </div>
-                  </Reveal>
-                  
-                  <Reveal delay={200}>
-                    <div className="relative group">
-                      <div className="absolute inset-0 bg-gradient-to-tr from-blue-600 to-purple-600 rounded-[2.5rem] transform rotate-3 opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-500"></div>
-                      <img 
-                        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                        alt="Team" 
-                        className="relative rounded-[2.5rem] shadow-2xl border-4 border-white dark:border-slate-800 z-10 transform transition-transform duration-500 group-hover:rotate-1 group-hover:scale-[1.02]"
-                      />
-                    </div>
-                  </Reveal>
-                </div>
-              </div>
-            </section>
-
-            <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SectionHeader 
-                  title={t.tech_stack.title} 
-                  subtitle={t.tech_stack.subtitle} 
-                />
-                <div className="grid md:grid-cols-3 lg:grid-cols-4 gap-8">
-                  {[
-                    { name: "React & Next.js", icon: Code2, desc: t.tech_stack.items[0].desc, color: "blue" },
-                    { name: "Node.js & Python", icon: Server, desc: t.tech_stack.items[1].desc, color: "green" },
-                    { name: "AWS & Azure", icon: Cloud, desc: t.tech_stack.items[2].desc, color: "orange" },
-                    { name: "Docker & K8s", icon: Boxes, desc: t.tech_stack.items[3].desc, color: "cyan" },
-                    { name: "PostgreSQL & MongoDB", icon: Database, desc: t.tech_stack.items[4].desc, color: "purple" },
-                    { name: "CI/CD Pipeline", icon: GitBranch, desc: t.tech_stack.items[5].desc, color: "pink" },
-                    { name: "Microservices", icon: Layers, desc: t.tech_stack.items[6].desc, color: "indigo" },
-                    { name: "REST & GraphQL", icon: Terminal, desc: t.tech_stack.items[7].desc, color: "teal" }
-                  ].map((tech, i) => (
-                    <Reveal key={i} delay={i * 50}>
-                      <SpotlightCard className={`p-6 rounded-2xl h-full flex flex-col items-center text-center group cursor-default`} color={tech.color}>
-                        <div className={`w-16 h-16 bg-${tech.color}-100 dark:bg-${tech.color}-900/30 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-${tech.color}-500/20`}>
-                          <tech.icon size={32} className={`text-${tech.color}-600 dark:text-${tech.color}-400`} />
-                        </div>
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{tech.name}</h4>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 font-medium">{tech.desc}</p>
-                      </SpotlightCard>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
-            </section>
-
-            <section className="py-32 bg-slate-50 dark:bg-slate-950/50">
-              <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                <SectionHeader 
-                  title={t.faq.title} 
-                  subtitle={t.faq.subtitle} 
-                />
-                <FAQAccordion faqs={t.faq.questions} />
-              </div>
-            </section>
-
-            <section className="py-32 relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800"></div>
-              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-              <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/10 to-transparent"></div>
-              <motion.div 
-                 animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-                 transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-                 className="absolute -top-1/2 -left-1/2 w-[100%] h-[100%] bg-blue-400/20 rounded-full blur-[150px]"
-              />
-              <motion.div 
-                 animate={{ scale: [1, 1.2, 1], opacity: [0.2, 0.4, 0.2] }}
-                 transition={{ duration: 10, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                 className="absolute -bottom-1/2 -right-1/2 w-[100%] h-[100%] bg-purple-400/20 rounded-full blur-[150px]"
-              />
-
-              <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-                <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight leading-tight drop-shadow-sm">
-                  {t.cta.title}
-                </h2>
-                <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-sm">
-                  {t.cta.description}
-                </p>
-                <button 
-                  onClick={() => setActivePage('contact')}
-                  className="bg-white text-blue-600 px-12 py-5 rounded-2xl font-black text-lg hover:bg-blue-50 transition-all shadow-2xl shadow-blue-900/30 hover:shadow-blue-900/50 hover:-translate-y-1 active:scale-[0.98] flex items-center gap-3 mx-auto group"
-                >
-                  {t.cta.button} <ArrowRight size={22} className="group-hover:translate-x-1 transition-transform"/>
-                </button>
-              </div>
-            </section>
+            <SEO 
+              title={t.navbar.home} 
+              description={t.hero.description}
+              lang={language}
+            />
+            <Hero navigateTo={setActivePage} onOpenCalculator={() => setIsCalculatorOpen(true)} t={t} />
+            <StatsSection t={t} />
+            <CRMPreview t={t} />
+            <TechStack t={t} />
+            <FAQ t={t} />
+            <CTA setActivePage={setActivePage} t={t} />
           </>
         );
 
       case 'solutions':
         return (
-          <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-              <SectionHeader 
-                title={t.solutions_page.title} 
-                subtitle={t.solutions_page.subtitle} 
-              />
-              
-              <div className="mb-24">
-                <TechStackMarquee technologies={[
-                  { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
-                  { name: "Node.js", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" },
-                  { name: "Python", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
-                  { name: "AWS", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
-                  { name: "Docker", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" },
-                  { name: "Flutter", logo: "https://upload.wikimedia.org/wikipedia/commons/1/17/Google-flutter-logo.png" }
-                ]} />
-              </div>
+          <>
+            <SEO 
+              title={t.navbar.solutions} 
+              description={t.solutions_page.subtitle}
+              lang={language}
+            />
+            <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+               <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                 <SectionHeader 
+                   title={t.solutions_page.title} 
+                   subtitle={t.solutions_page.subtitle} 
+                 />
+                 <div className="mb-24">
+                   <TechStackMarquee technologies={[
+                     { name: "React", logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" },
+                     { name: "Node.js", logo: "https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" },
+                     { name: "Python", logo: "https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" },
+                     { name: "AWS", logo: "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg" },
+                     { name: "Docker", logo: "https://upload.wikimedia.org/wikipedia/commons/4/4e/Docker_%28container_engine%29_logo.svg" },
+                     { name: "Flutter", logo: "https://upload.wikimedia.org/wikipedia/commons/1/17/Google-flutter-logo.png" }
+                   ]} />
+                 </div>
 
-              {/* Spotlight Efekti Eklenmiş Çözüm Kartları */}
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-32">
-                {[
-                  { icon: LayoutDashboard, color: "blue" },
-                  { icon: Smartphone, color: "purple" },
-                  { icon: ShoppingBagIcon, color: "green" },
-                  { icon: Boxes, color: "orange" },
-                  { icon: Users, color: "pink" },
-                  { icon: GitBranch, color: "cyan" },
-                  { icon: Cpu, color: "indigo" },
-                  { icon: Wifi, color: "teal" }
-                ].map((config, i) => {
-                  const item = t.solutions_page.items[i];
-                  return (
-                  <Reveal key={i} delay={i * 50}>
-                     {/* Spotlight Card Wrapper Kullanıldı */}
-                    <SpotlightCard className="rounded-[2rem] p-6 h-full flex flex-col" color={config.color}>
-                      <div className={`w-14 h-14 rounded-2xl bg-${config.color}-100 dark:bg-${config.color}-900/30 flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 group-hover:scale-110 transition-transform shadow-md shadow-${config.color}-500/10 relative z-10`}>
-                        <config.icon size={28} />
-                      </div>
-                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{item.title}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 relative z-10 leading-relaxed flex-1">{item.desc}</p>
-                      <div className="flex flex-wrap gap-2 relative z-10 mt-auto">
-                        {item.tags.map((tag, idx) => (
-                          <span key={idx} className={`text-[10px] font-bold px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700`}>
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </SpotlightCard>
-                  </Reveal>
-                )})}
-              </div>
+                 {/* Spotlight Efekti Eklenmiş Çözüm Kartları */}
+                 <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-32">
+                   {[
+                     { icon: LayoutDashboard, color: "blue" },
+                     { icon: Smartphone, color: "purple" },
+                     { icon: ShoppingBagIcon, color: "green" },
+                     { icon: Boxes, color: "orange" },
+                     { icon: Users, color: "pink" },
+                     { icon: GitBranch, color: "cyan" },
+                     { icon: Cpu, color: "indigo" },
+                     { icon: Wifi, color: "teal" }
+                   ].map((config, i) => {
+                     const item = t.solutions_page.items[i];
+                     return (
+                     <Reveal key={i} delay={i * 50}>
+                        {/* Spotlight Card Wrapper Kullanıldı */}
+                       <SpotlightCard className="rounded-[2rem] p-6 h-full flex flex-col" color={config.color}>
+                         <div className={`w-14 h-14 rounded-2xl bg-${config.color}-100 dark:bg-${config.color}-900/30 flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 group-hover:scale-110 transition-transform shadow-md shadow-${config.color}-500/10 relative z-10`}>
+                           <config.icon size={28} />
+                         </div>
+                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{item.title}</h3>
+                         <p className="text-sm text-slate-600 dark:text-slate-400 mb-6 relative z-10 leading-relaxed flex-1">{item.desc}</p>
+                         <div className="flex flex-wrap gap-2 relative z-10 mt-auto">
+                           {item.tags.map((tag, idx) => (
+                             <span key={idx} className={`text-[10px] font-bold px-2 py-1 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700`}>
+                               {tag}
+                             </span>
+                           ))}
+                         </div>
+                       </SpotlightCard>
+                     </Reveal>
+                   )})}
+                 </div>
 
-              <div className="mb-24">
-                <SectionHeader 
-                  title={t.pricing.title} 
-                  subtitle={t.pricing.subtitle} 
-                />
-                <div className="grid md:grid-cols-3 gap-10 items-start">
-                  <PricingCard 
-                    onSelect={() => setActivePage('contact')}
-                    plan={t.pricing.plans[0]} 
-                  />
-                  <PricingCard 
-                    isPopular={true}
-                    onSelect={() => setActivePage('contact')}
-                    plan={t.pricing.plans[1]} 
-                  />
-                  <PricingCard 
-                    onSelect={() => setActivePage('contact')}
-                    plan={t.pricing.plans[2]} 
-                  />
-                </div>
-              </div>
+                 <div className="mb-24">
+                   <SectionHeader 
+                     title={t.pricing.title} 
+                     subtitle={t.pricing.subtitle} 
+                   />
+                   <div className="grid md:grid-cols-3 gap-10 items-start">
+                     <PricingCard 
+                       onSelect={() => setActivePage('contact')}
+                       plan={t.pricing.plans[0]} 
+                     />
+                     <PricingCard 
+                       isPopular={true}
+                       onSelect={() => setActivePage('contact')}
+                       plan={t.pricing.plans[1]} 
+                     />
+                     <PricingCard 
+                       onSelect={() => setActivePage('contact')}
+                       plan={t.pricing.plans[2]} 
+                     />
+                   </div>
+                 </div>
+               </div>
             </div>
-          </div>
+            <CTA setActivePage={setActivePage} t={t} />
+          </>
         );
 
       case 'projects':
-        return <ProjectsShowcase onSelectProject={setSelectedProject} t={t} />;
+        return (
+          <>
+            <SEO 
+              title={t.navbar.projects} 
+              description={t.projects_page.subtitle}
+              lang={language}
+            />
+            <ProjectsShowcase onSelectProject={setSelectedProject} t={t} />
+          </>
+        );
+
+      case 'blog':
+        return (
+          <>
+            <SEO 
+              title={selectedBlogPost ? selectedBlogPost.title[language] : t.navbar.blog} 
+              description={selectedBlogPost ? selectedBlogPost.excerpt[language] : t.blog_page.subtitle}
+              lang={language}
+            />
+            {selectedBlogPost ? (
+              <BlogPostDetail 
+                post={selectedBlogPost} 
+                onBack={() => setSelectedBlogPost(null)} 
+                t={t} 
+                language={language}
+              />
+            ) : (
+              <BlogShowcase t={t} language={language} onSelectPost={setSelectedBlogPost} />
+            )}
+          </>
+        );
 
       case 'process':
         return (
-          <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-              <SectionHeader 
-                title={t.process_page.title} 
-                subtitle={t.process_page.subtitle} 
-              />
-              
-              <div className="relative mt-24">
-                <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500/20 via-purple-500/20 to-blue-500/20 hidden md:block rounded-full"></div>
+          <>
+            <SEO 
+              title={t.navbar.process} 
+              description={t.process_page.subtitle}
+              lang={language}
+            />
+            <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <SectionHeader 
+                  title={t.process_page.title} 
+                  subtitle={t.process_page.subtitle} 
+                />
                 
-                {[
-                  { icon: Search, color: "blue" },
-                  { icon: LayoutDashboard, color: "purple" },
-                  { icon: Code2, color: "pink" },
-                  { icon: ShieldCheck, color: "orange" },
-                  { icon: Rocket, color: "green" }
-                ].map((config, i) => {
-                  const step = t.process_page.steps[i];
-                  return (
-                  <Reveal key={i}>
-                    <div className={`flex items-center justify-between mb-24 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col gap-8 md:gap-0`}>
-                      <div className="w-full md:w-5/12 relative">
-                         {/* Card Hover Effect Enhanced */}
-                        <SpotlightCard className={`p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border-2 border-slate-100 dark:border-slate-800 relative overflow-hidden transition-all duration-500 hover:border-${config.color}-300 dark:hover:border-${config.color}-800/50`} color={config.color}>
-                          <div className={`absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-${config.color}-600 dark:text-${config.color}-400 transform group-hover:scale-110 duration-500`}>
-                            <config.icon size={120} />
-                          </div>
-                          <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-100/0 dark:from-slate-800 dark:to-slate-900/0 absolute bottom-4 right-6 z-0 opacity-50 select-none">{step.step}</span>
-                          <div className="relative z-10">
-                            <div className={`w-14 h-14 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 shadow-md shadow-${config.color}-500/10 group-hover:scale-110 transition-transform`}>
-                              <config.icon size={28} />
-                            </div>
-                            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{step.title}</h3>
-                            <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{step.desc}</p>
-                          </div>
-                        </SpotlightCard>
-                        {i !== 4 && <div className="md:hidden absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full h-24 w-1 bg-gradient-to-b from-slate-200 to-transparent dark:from-slate-800"></div>}
-                      </div>
-                      
-                      <div className="hidden md:flex w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full items-center justify-center text-white font-black z-10 border-4 border-white dark:border-slate-950 shadow-lg shadow-blue-500/20 transform hover:scale-125 transition-transform">
-                        {i + 1}
-                      </div>
-                      
-                      <div className="w-full md:w-5/12"></div>
-                    </div>
-                  </Reveal>
-                )})}
-              </div>
-            </div>
-          </div>
-        );
-
-      case 'about':
-        return (
-          <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-              <SectionHeader 
-                title={t.about_page.title} 
-                subtitle={t.about_page.subtitle} 
-              />
-
-              <div className="grid lg:grid-cols-2 gap-20 items-center mb-32">
-                <Reveal>
-                  <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-blue-900/20 group">
-                    <div className="absolute inset-0 bg-blue-600/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
-                    <img 
-                      src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                      alt="Modern Office" 
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent flex items-end p-10 z-20">
-                      <div className="text-white">
-                        <div className="inline-block px-3 py-1 bg-blue-600 rounded-full text-xs font-bold mb-3 shadow-sm">{t.about_page.office.tag}</div>
-                        <h3 className="text-3xl font-bold mb-3">{t.about_page.office.location}</h3>
-                        <p className="text-slate-200 font-medium leading-relaxed max-w-md">{t.about_page.office.desc}</p>
-                      </div>
-                    </div>
-                  </div>
-                </Reveal>
-                
-                <Reveal delay={200}>
-                  <div className="space-y-10">
-                    <div>
-                       <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
-                         <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><Rocket size={22}/></span>
-                         {t.about_page.vision.title}
-                       </h3>
-                       <div className="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
-                         <p>
-                           {t.about_page.vision.p1}
-                         </p>
-                         <p>
-                           {t.about_page.vision.p2}
-                         </p>
-                       </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-6">
-                      <SpotlightCard className="p-6 rounded-3xl" color="blue">
-                        <Target className="text-blue-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[0].title}</h4>
-                        <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[0].desc}</p>
-                      </SpotlightCard>
-                      <SpotlightCard className="p-6 rounded-3xl" color="orange">
-                        <Lightbulb className="text-yellow-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
-                        <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[1].title}</h4>
-                        <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[1].desc}</p>
-                      </SpotlightCard>
-                    </div>
-                  </div>
-                </Reveal>
-              </div>
-
-              <div className="mb-32">
-                 <SectionHeader 
-                    title={t.about_page.timeline_title} 
-                    subtitle={t.about_page.timeline_subtitle} 
-                 />
-                 <Timeline t={t}/>
-              </div>
-
-              <div className="mb-24">
-                <h3 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16 tracking-tight">{t.about_page.solutions_area_title}</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="relative mt-24">
+                  <div className="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-blue-500/20 via-purple-500/20 to-blue-500/20 hidden md:block rounded-full"></div>
+                  
                   {[
-                    { icon: Briefcase, color: "blue" },
-                    { icon: ShoppingBagIcon, color: "green" },
-                    { icon: Smartphone, color: "purple" },
-                    { icon: Cpu, color: "indigo" },
-                    { icon: Wifi, color: "orange" },
-                    { icon: ShieldCheck, color: "red" }
+                    { icon: Search, color: "blue" },
+                    { icon: LayoutDashboard, color: "purple" },
+                    { icon: Code2, color: "pink" },
+                    { icon: ShieldCheck, color: "orange" },
+                    { icon: Rocket, color: "green" }
                   ].map((config, i) => {
-                    const solution = t.about_page.solution_areas[i];
+                    const step = t.process_page.steps[i];
                     return (
-                    <Reveal key={i} delay={i * 80}>
-                      <SpotlightCard className="p-8 rounded-[2rem] h-full flex flex-col" color={config.color}>
-                        <div className={`w-16 h-16 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-${config.color}-500/20`}>
-                          <config.icon size={32} className={`text-${config.color}-600 dark:text-${config.color}-400`} />
-                        </div>
-                        <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{solution.title}</h4>
-                        <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed flex-1 font-medium">{solution.desc}</p>
-                        <div className="space-y-2">
-                          {solution.items.map((item, idx) => (
-                            <div key={idx} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                              <div className={`w-1.5 h-1.5 rounded-full bg-${config.color}-500`}></div>
-                              <span className="font-medium">{item}</span>
+                    <Reveal key={i}>
+                      <div className={`flex items-center justify-between mb-24 ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} flex-col gap-8 md:gap-0`}>
+                        <div className="w-full md:w-5/12 relative">
+                           {/* Card Hover Effect Enhanced */}
+                          <SpotlightCard className={`p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 border-2 border-slate-100 dark:border-slate-800 relative overflow-hidden transition-all duration-500 hover:border-${config.color}-300 dark:hover:border-${config.color}-800/50`} color={config.color}>
+                            <div className={`absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity text-${config.color}-600 dark:text-${config.color}-400 transform group-hover:scale-110 duration-500`}>
+                              <config.icon size={120} />
                             </div>
-                          ))}
+                            <span className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-br from-slate-200 to-slate-100/0 dark:from-slate-800 dark:to-slate-900/0 absolute bottom-4 right-6 z-0 opacity-50 select-none">{step.step}</span>
+                            <div className="relative z-10">
+                              <div className={`w-14 h-14 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center text-${config.color}-600 dark:text-${config.color}-400 mb-6 shadow-md shadow-${config.color}-500/10 group-hover:scale-110 transition-transform`}>
+                                <config.icon size={28} />
+                              </div>
+                              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">{step.title}</h3>
+                              <p className="text-slate-600 dark:text-slate-400 leading-relaxed font-medium">{step.desc}</p>
+                            </div>
+                          </SpotlightCard>
+                          {i !== 4 && <div className="md:hidden absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full h-24 w-1 bg-gradient-to-b from-slate-200 to-transparent dark:from-slate-800"></div>}
                         </div>
-                      </SpotlightCard>
+                        
+                        <div className="hidden md:flex w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-full items-center justify-center text-white font-black z-10 border-4 border-white dark:border-slate-950 shadow-lg shadow-blue-500/20 transform hover:scale-125 transition-transform">
+                          {i + 1}
+                        </div>
+                        
+                        <div className="w-full md:w-5/12"></div>
+                      </div>
                     </Reveal>
                   )})}
                 </div>
               </div>
             </div>
-          </div>
+            <CTA setActivePage={setActivePage} t={t} />
+          </>
         );
 
-      case 'contact':
+      case 'about':
         return (
-          <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-              <SectionHeader 
-                title={t.contact_page.title} 
-                subtitle={t.contact_page.subtitle} 
-              />
+          <>
+            <SEO 
+              title={t.navbar.about} 
+              description={t.about_page.subtitle}
+              lang={language}
+            />
+            <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <SectionHeader 
+                  title={t.about_page.title} 
+                  subtitle={t.about_page.subtitle} 
+                />
 
-              <div className="grid lg:grid-cols-5 gap-12 items-start">
-                <Reveal className="lg:col-span-3">
-                  <div className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-800 relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10 pointer-events-none"></div>
-                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
-                        <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><MessageSquare size={22}/></span>
-                        {t.contact_page.form.title}
-                    </h3>
-                    <form className="space-y-6" onSubmit={handleContactSubmit}>
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.name}</label>
-                          <input required name="name" type="text" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.name_ph} />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.email}</label>
-                          <input required name="email" type="email" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.email_ph} />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.type}</label>
-                        <div className="relative">
-                           <select name="projectType" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium appearance-none cursor-pointer">
-                             {[
-                               { tr: "Özel Yazılım / CRM / ERP", en: "Custom Software / CRM / ERP" },
-                               { tr: "Mobil Uygulama Geliştirme", en: "Mobile App Development" },
-                               { tr: "Web Sitesi / E-Ticaret", en: "Website / E-Commerce" },
-                               { tr: "Sistem Entegrasyonu", en: "System Integration" },
-                               { tr: "Yapay Zeka / IoT", en: "AI / IoT" },
-                               { tr: "Diğer", en: "Other" }
-                             ].map((opt, i) => (
-                               <option key={i} value={opt[language]}>{opt[language]}</option>
-                             ))}
-                           </select>
-                           <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.details}</label>
-                        <textarea required name="message" rows="5" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium resize-none" placeholder={t.contact_page.form.details_ph}></textarea>
-                      </div>
-                      <button disabled={isSubmitting} type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed text-white py-5 rounded-xl font-bold transition-all shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center justify-center gap-3 active:scale-[0.98]">
-                        {isSubmitting ? (
-                          <>
-                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                            {t.contact_page.form.submitting}
-                          </>
-                        ) : (
-                          <>
-                            <Send size={22} /> {t.contact_page.form.submit}
-                          </>
-                        )}
-                      </button>
-                    </form>
-                  </div>
-                </Reveal>
-
-                <div className="lg:col-span-2 space-y-8">
-                  <Reveal delay={200}>
-                    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-blue-900/30 relative overflow-hidden group">
-                      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500"></div>
-                      <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-purple-500/30 transition-colors duration-500"></div>
-                      <h3 className="text-2xl font-bold mb-8 relative z-10 flex items-center gap-3">
-                          <AlertCircle size={24} className="text-blue-200"/> {t.contact_page.info.title}
-                      </h3>
-                      <div className="space-y-8 relative z-10">
-                        <div className="flex items-start gap-5 group/item">
-                          <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
-                            <Mail size={24} className="text-blue-100"/>
-                          </div>
-                          <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.email}</p>
-                            <p className="font-bold text-xl">gebcay@gmail.com</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-5 group/item">
-                          <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
-                            <Phone size={24} className="text-blue-100"/>
-                          </div>
-                          <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.phone}</p>
-                            <p className="font-bold text-xl">+90 544 572 26 34</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-5 group/item">
-                          <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
-                            <Globe size={24} className="text-blue-100"/>
-                          </div>
-                          <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hq}</p>
-                            <p className="font-bold text-lg leading-tight">{t.contact_page.info.address}</p>
-                          </div>
-                        </div>
-                        <div className="flex items-start gap-5 group/item">
-                          <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
-                            <Clock size={24} className="text-blue-100"/>
-                          </div>
-                          <div>
-                            <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hours_label}</p>
-                            <p className="font-bold text-lg leading-tight">{t.contact_page.info.hours}</p>
-                          </div>
+                <div className="grid lg:grid-cols-2 gap-20 items-center mb-32">
+                  <Reveal>
+                    <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl shadow-blue-900/20 group">
+                      <div className="absolute inset-0 bg-blue-600/20 mix-blend-overlay z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                      <img 
+                        src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                        alt="Modern Office" 
+                        className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent flex items-end p-10 z-20">
+                        <div className="text-white">
+                          <div className="inline-block px-3 py-1 bg-blue-600 rounded-full text-xs font-bold mb-3 shadow-sm">{t.about_page.office.tag}</div>
+                          <h3 className="text-3xl font-bold mb-3">{t.about_page.office.location}</h3>
+                          <p className="text-slate-200 font-medium leading-relaxed max-w-md">{t.about_page.office.desc}</p>
                         </div>
                       </div>
                     </div>
                   </Reveal>
+                  
+                  <Reveal delay={200}>
+                    <div className="space-y-10">
+                      <div>
+                         <h3 className="text-3xl font-bold text-slate-900 dark:text-white mb-6 flex items-center gap-3">
+                           <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><Rocket size={22}/></span>
+                           {t.about_page.vision.title}
+                         </h3>
+                         <div className="space-y-6 text-lg text-slate-600 dark:text-slate-400 leading-relaxed font-medium">
+                           <p>
+                             {t.about_page.vision.p1}
+                           </p>
+                           <p>
+                             {t.about_page.vision.p2}
+                           </p>
+                         </div>
+                      </div>
 
-                  <Reveal delay={300}>
-                    <div className="bg-slate-200 dark:bg-slate-800 rounded-[2.5rem] h-96 w-full border-4 border-white dark:border-slate-900 shadow-xl relative overflow-hidden group">
-                      <iframe 
-                        src="https://maps.google.com/maps?q=40.0026993,32.8235635&hl=tr&z=17&output=embed" 
-                        width="100%" 
-                        height="100%" 
-                        style={{ border: 0 }} 
-                        allowFullScreen="" 
-                        loading="lazy" 
-                        referrerPolicy="no-referrer-when-downgrade"
-                        className="w-full h-full grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
-                      ></iframe>
-                      <div className="absolute bottom-4 right-4 z-10">
-                        <a 
-                          href="https://www.google.com/maps/place/Gamador+Meydan/@40.0021238,32.821621,17z/data=!4m6!3m5!1s0x14d34df67a613f7d:0x3848390771d795a6!8m2!3d40.0026993!4d32.8235635" 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 hover:scale-105 transition-transform"
-                        >
-                          <ExternalLink size={16} /> {t.contact_page.info.directions}
-                        </a>
+                      <div className="grid grid-cols-2 gap-6">
+                        <SpotlightCard className="p-6 rounded-3xl" color="blue">
+                          <Target className="text-blue-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
+                          <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[0].title}</h4>
+                          <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[0].desc}</p>
+                        </SpotlightCard>
+                        <SpotlightCard className="p-6 rounded-3xl" color="orange">
+                          <Lightbulb className="text-yellow-500 mb-4 group-hover:scale-110 transition-transform" size={36} />
+                          <h4 className="font-bold text-slate-900 dark:text-white mb-2 text-lg">{t.about_page.values[1].title}</h4>
+                          <p className="text-slate-600 dark:text-slate-400 font-medium">{t.about_page.values[1].desc}</p>
+                        </SpotlightCard>
                       </div>
                     </div>
                   </Reveal>
                 </div>
+
+                <div className="mb-32">
+                   <SectionHeader 
+                      title={t.about_page.timeline_title} 
+                      subtitle={t.about_page.timeline_subtitle} 
+                   />
+                   <Timeline t={t}/>
+                </div>
+
+                <div className="mb-24">
+                  <h3 className="text-3xl font-extrabold text-center text-slate-900 dark:text-white mb-16 tracking-tight">{t.about_page.solutions_area_title}</h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {[
+                      { icon: Briefcase, color: "blue" },
+                      { icon: ShoppingBagIcon, color: "green" },
+                      { icon: Smartphone, color: "purple" },
+                      { icon: Cpu, color: "indigo" },
+                      { icon: Wifi, color: "orange" },
+                      { icon: ShieldCheck, color: "red" }
+                    ].map((config, i) => {
+                      const solution = t.about_page.solution_areas[i];
+                      return (
+                      <Reveal key={i} delay={i * 80}>
+                        <SpotlightCard className="p-8 rounded-[2rem] h-full flex flex-col" color={config.color}>
+                          <div className={`w-16 h-16 bg-${config.color}-100 dark:bg-${config.color}-900/30 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg shadow-${config.color}-500/20`}>
+                            <config.icon size={32} className={`text-${config.color}-600 dark:text-${config.color}-400`} />
+                          </div>
+                          <h4 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{solution.title}</h4>
+                          <p className="text-slate-600 dark:text-slate-400 mb-6 leading-relaxed flex-1 font-medium">{solution.desc}</p>
+                          <div className="space-y-2">
+                            {solution.items.map((item, idx) => (
+                              <div key={idx} className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                                <div className={`w-1.5 h-1.5 rounded-full bg-${config.color}-500`}></div>
+                                <span className="font-medium">{item}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </SpotlightCard>
+                      </Reveal>
+                    )})}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+            <CTA setActivePage={setActivePage} t={t} />
+          </>
+        );
+
+      case 'contact':
+        return (
+          <>
+            <SEO 
+              title={t.navbar.contact} 
+              description={t.contact_page.subtitle}
+              lang={language}
+            />
+            <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+              <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <SectionHeader 
+                  title={t.contact_page.title} 
+                  subtitle={t.contact_page.subtitle} 
+                />
+
+                <div className="grid lg:grid-cols-5 gap-12 items-start">
+                  <Reveal className="lg:col-span-3">
+                    <div className="bg-white dark:bg-slate-900 p-10 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 border border-slate-100 dark:border-slate-800 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-blue-50 dark:bg-blue-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 -z-10 pointer-events-none"></div>
+                      <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 flex items-center gap-3">
+                          <span className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 shadow-sm"><MessageSquare size={22}/></span>
+                          {t.contact_page.form.title}
+                      </h3>
+                      <form className="space-y-6" onSubmit={handleContactSubmit}>
+                        <div className="grid md:grid-cols-2 gap-6">
+                          <div className="space-y-2">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.name}</label>
+                            <input required name="name" type="text" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.name_ph} />
+                          </div>
+                          <div className="space-y-2">
+                            <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.email}</label>
+                            <input required name="email" type="email" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium" placeholder={t.contact_page.form.email_ph} />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.type}</label>
+                          <div className="relative">
+                             <select name="projectType" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium appearance-none cursor-pointer">
+                               {[
+                                 { tr: "Özel Yazılım / CRM / ERP", en: "Custom Software / CRM / ERP" },
+                                 { tr: "Mobil Uygulama Geliştirme", en: "Mobile App Development" },
+                                 { tr: "Web Sitesi / E-Ticaret", en: "Website / E-Commerce" },
+                                 { tr: "Sistem Entegrasyonu", en: "System Integration" },
+                                 { tr: "Yapay Zeka / IoT", en: "AI / IoT" },
+                                 { tr: "Diğer", en: "Other" }
+                               ].map((opt, i) => (
+                                 <option key={i} value={opt[language]}>{opt[language]}</option>
+                               ))}
+                             </select>
+                             <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={20} />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <label className="block text-sm font-bold text-slate-700 dark:text-slate-300 ml-1">{t.contact_page.form.details}</label>
+                          <textarea required name="message" rows="5" className="w-full px-5 py-4 rounded-xl bg-slate-50 dark:bg-slate-800 border-2 border-slate-100 dark:border-slate-700 focus:border-blue-500 dark:focus:border-blue-400 focus:bg-white dark:focus:bg-slate-900 focus:ring-4 focus:ring-blue-500/10 outline-none transition-all font-medium resize-none" placeholder={t.contact_page.form.details_ph}></textarea>
+                        </div>
+                        <button disabled={isSubmitting} type="submit" className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 disabled:opacity-70 disabled:cursor-not-allowed text-white py-5 rounded-xl font-bold transition-all shadow-xl shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center justify-center gap-3 active:scale-[0.98]">
+                          {isSubmitting ? (
+                            <>
+                              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                              {t.contact_page.form.submitting}
+                            </>
+                          ) : (
+                            <>
+                              <Send size={22} /> {t.contact_page.form.submit}
+                            </>
+                          )}
+                        </button>
+                      </form>
+                    </div>
+                  </Reveal>
+
+                  <div className="lg:col-span-2 space-y-8">
+                    <Reveal delay={200}>
+                      <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2.5rem] p-10 text-white shadow-2xl shadow-blue-900/30 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-colors duration-500"></div>
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 group-hover:bg-purple-500/30 transition-colors duration-500"></div>
+                        <h3 className="text-2xl font-bold mb-8 relative z-10 flex items-center gap-3">
+                            <AlertCircle size={24} className="text-blue-200"/> {t.contact_page.info.title}
+                        </h3>
+                        <div className="space-y-8 relative z-10">
+                          <div className="flex items-start gap-5 group/item">
+                            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
+                              <Mail size={24} className="text-blue-100"/>
+                            </div>
+                            <div>
+                              <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.email}</p>
+                              <p className="font-bold text-xl">gebcay@gmail.com</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-5 group/item">
+                            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
+                              <Phone size={24} className="text-blue-100"/>
+                            </div>
+                            <div>
+                              <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.phone}</p>
+                              <p className="font-bold text-xl">+90 544 572 26 34</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-5 group/item">
+                            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
+                              <Globe size={24} className="text-blue-100"/>
+                            </div>
+                            <div>
+                              <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hq}</p>
+                              <p className="font-bold text-lg leading-tight">{t.contact_page.info.address}</p>
+                            </div>
+                          </div>
+                          <div className="flex items-start gap-5 group/item">
+                            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 backdrop-blur-sm group-hover/item:bg-white/20 transition-colors shadow-inner-white">
+                              <Clock size={24} className="text-blue-100"/>
+                            </div>
+                            <div>
+                              <p className="text-blue-200 text-sm font-bold uppercase tracking-wider mb-1">{t.contact_page.info.hours_label}</p>
+                              <p className="font-bold text-lg leading-tight">{t.contact_page.info.hours}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Reveal>
+
+                    <Reveal delay={300}>
+                      <div className="bg-slate-200 dark:bg-slate-800 rounded-[2.5rem] h-96 w-full border-4 border-white dark:border-slate-900 shadow-xl relative overflow-hidden group">
+                        <iframe 
+                          src="https://maps.google.com/maps?q=40.0026993,32.8235635&hl=tr&z=17&output=embed" 
+                          width="100%" 
+                          height="100%" 
+                          style={{ border: 0 }} 
+                          allowFullScreen="" 
+                          loading="lazy" 
+                          referrerPolicy="no-referrer-when-downgrade"
+                          className="w-full h-full grayscale-[20%] group-hover:grayscale-0 transition-all duration-700"
+                        ></iframe>
+                        <div className="absolute bottom-4 right-4 z-10">
+                          <a 
+                            href="https://www.google.com/maps/place/Gamador+Meydan/@40.0021238,32.821621,17z/data=!4m6!3m5!1s0x14d34df67a613f7d:0x3848390771d795a6!8m2!3d40.0026993!4d32.8235635" 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white px-4 py-2 rounded-xl font-bold text-sm shadow-lg flex items-center gap-2 hover:scale-105 transition-transform"
+                          >
+                            <ExternalLink size={16} /> {t.contact_page.info.directions}
+                          </a>
+                        </div>
+                      </div>
+                    </Reveal>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <CTA setActivePage={setActivePage} t={t} />
+          </>
         );
         
       default:
@@ -1904,54 +2300,24 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500 font-sans selection:bg-purple-500/30 dark:selection:bg-blue-500/30">
-      <CookieConsent t={t} />
-      <motion.div className="fixed top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 origin-left z-[100] shadow-[0_1px_8px_rgba(59,130,246,0.5)]" style={{ scaleX }} />
-      
-      {/* Scroll to Top Button */}
-      <AnimatePresence>
-        {isScrolled && (
-            <motion.button
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0 }}
-                onClick={scrollToTop}
-                className="fixed bottom-8 right-8 z-40 bg-white dark:bg-slate-800 p-3 rounded-full shadow-lg border border-slate-200 dark:border-slate-700 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-slate-700 transition-colors"
-            >
-                <ArrowUp size={24} />
-            </motion.button>
-        )}
-      </AnimatePresence>
+    <HelmetProvider>
+      <div className={`min-h-screen transition-colors duration-500 ${darkMode ? 'dark' : ''}`}>
+        {/* Scroll Progress Bar */}
+        <motion.div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 origin-left z-[100]" style={{ scaleX }} />
 
-      <AnimatePresence>
-        {toast && <Toast message={toast} onClose={() => setToast(null)} t={t} />}
-      </AnimatePresence>
+        <Navbar 
+          activePage={activePage} 
+          setActivePage={setActivePage} 
+          darkMode={darkMode} 
+          setDarkMode={setDarkMode} 
+          t={t}
+          language={language}
+          setLanguage={setLanguage}
+        />
 
-      <AnimatePresence>
-        {isCalculatorOpen && <ProjectCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} onShowToast={(msg) => setToast(msg)} t={t} />}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} t={t} />}
-      </AnimatePresence>
-      
-      <WhatsAppButton t={t} />
-
-      <Navbar 
-        activePage={activePage} 
-        setActivePage={setActivePage} 
-        isScrolled={isScrolled} 
-        darkMode={darkMode} 
-        setDarkMode={setDarkMode}
-        language={language}
-        setLanguage={setLanguage}
-        t={t} 
-      />
-
-      <AnimatePresence mode="wait">
-        <motion.main
-          key={activePage}
-          initial={{ opacity: 0 }}
+        <AnimatePresence mode="wait">
+          <motion.main
+            key={activePage}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.4 }}
@@ -1981,6 +2347,7 @@ function App() {
                 <li><button onClick={() => setActivePage('home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.home}</button></li>
                 <li><button onClick={() => setActivePage('solutions')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.solutions}</button></li>
                 <li><button onClick={() => setActivePage('projects')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.projects}</button></li>
+                 <li><button onClick={() => setActivePage('blog')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.blog}</button></li>
                 <li><button onClick={() => setActivePage('process')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.process}</button></li>
                 <li><button onClick={() => setActivePage('about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.about}</button></li>
               </ul>
@@ -2005,7 +2372,48 @@ function App() {
           </div>
         </div>
       </footer>
+
+      {/* Global Components */}
+      
+      {/* Scroll to Top Button */}
+      <motion.button
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: isScrolled ? 1 : 0, scale: isScrolled ? 1 : 0 }}
+        onClick={scrollToTop}
+        className="fixed bottom-8 right-8 z-40 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700"
+      >
+        <ArrowUp size={24} />
+      </motion.button>
+
+      <AnimatePresence>
+        {toast && <Toast message={toast} onClose={() => setToast(null)} t={t} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {selectedProject && (
+          <ProjectModal 
+            project={selectedProject} 
+            onClose={() => setSelectedProject(null)} 
+            t={t}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isCalculatorOpen && (
+          <ProjectCalculator 
+            isOpen={isCalculatorOpen} 
+            onClose={() => setIsCalculatorOpen(false)} 
+            onShowToast={(msg) => setToast(msg)}
+            t={t} 
+          />
+        )}
+      </AnimatePresence>
+
+      <WhatsAppButton t={t} />
+
     </div>
+    </HelmetProvider>
   );
 }
 

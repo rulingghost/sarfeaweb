@@ -19,6 +19,7 @@ export const translations = {
       process: "Süreç",
       about: "Kurumsal",
       projects: "Neler Yaptık?",
+      blog: "Blog & İçgörü",
       contact: "İletişim",
       startProject: "Proje Başlat",
       darkMode: "Karanlık Mod",
@@ -286,6 +287,18 @@ export const translations = {
       stat_efficiency: "Verimlilik",
       stat_users: "Aktif Kullanıcı",
       btn_detail: "İncele"
+    },
+    blog_page: {
+      title: "Teknoloji Günlüğü",
+      subtitle: "Yazılım dünyasındaki son trendler, teknik analizler ve sektörel içgörüler.",
+      read_more: "Devamını Oku",
+      popular: "Popüler",
+      categories: {
+        all: "Tümü",
+        dev: "Yazılım Geliştirme",
+        ai: "Yapay Zeka",
+        trend: "Trendler"
+      }
     }
   },
   en: {
@@ -295,6 +308,7 @@ export const translations = {
         process: "Process",
         about: "Corporate",
         projects: "Case Studies",
+        blog: "Blog & Insights",
         contact: "Contact",
         startProject: "Start Project",
         darkMode: "Dark Mode",
@@ -562,6 +576,18 @@ export const translations = {
         stat_efficiency: "Efficiency",
         stat_users: "Active Users",
         btn_detail: "View Detail"
+      },
+      blog_page: {
+        title: "Tech Journal",
+        subtitle: "Latest trends in the software world, technical analyses, and sectoral insights.",
+        read_more: "Read More",
+        popular: "Popular",
+        categories: {
+          all: "All",
+          dev: "Development",
+          ai: "Artificial Intelligence",
+          trend: "Trends"
+        }
       }
   },
   ar: {
@@ -571,6 +597,7 @@ export const translations = {
       process: "العملية",
       about: "الشركة",
       projects: "أعمالنا",
+      blog: "المدونة",
       contact: "اتصل بنا",
       startProject: "ابدأ المشروع",
       darkMode: "الوضع الداكن",
@@ -838,8 +865,19 @@ export const translations = {
       stat_efficiency: "كفاءة",
       stat_users: "مستخدم نشط",
       btn_detail: "تفاصيل"
+    },
+    blog_page: {
+      title: "مجلة التكنولوجيا",
+      subtitle: "أحدث الاتجاهات في عالم البرمجيات، والتحليلات الفنية، ورؤى القطاع.",
+      read_more: "اقرأ المزيد",
+      popular: "شائع",
+      categories: {
+        all: "الكل",
+        dev: "تطوير البرمجيات",
+        ai: "الذكاء الاصطناعي",
+        trend: "اتجاهات"
+      }
     }
-
   },
   fr: {
     navbar: {
