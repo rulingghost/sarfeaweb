@@ -1434,10 +1434,10 @@ const ProjectsShowcase = ({ onSelectProject, t }) => {
 };
 
 // --- SEO COMPONENT ---
-const SEO = ({ title, description, lang = 'tr', type = 'website', image = 'https://sarfea.com/og-image.jpg', article = null }) => {
+const SEO = ({ title, description, lang = 'tr', type = 'website', image = 'https://www.sarfea.tr/logo.png', article = null }) => {
   const siteName = "Sarfea Software | Özel Yazılım, ERP, CRM ve Mobil Uygulama Çözümleri";
   const fullTitle = `${title} | ${siteName}`;
-  const canonical = `https://sarfea.tr/${lang === 'tr' ? '' : lang}`;
+  const canonical = `https://www.sarfea.tr/${lang === 'tr' ? '' : lang}`;
 
   // --- DYNAMIC SEO FUEL ENGINE ---
   // Bu motor, haftalık olarak trend anahtar kelimeleri rotasyona sokarak Google botlarını "taze içerik" ile besler.
