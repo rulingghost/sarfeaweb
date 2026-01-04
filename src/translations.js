@@ -18,6 +18,7 @@ export const translations = {
       solutions: "Teknolojiler",
       process: "Süreç",
       about: "Kurumsal",
+      projects: "Neler Yaptık?",
       contact: "İletişim",
       startProject: "Proje Başlat",
       darkMode: "Karanlık Mod",
@@ -273,6 +274,18 @@ export const translations = {
         title: "Talep Alındı!",
         success_contact: "Proje detaylarınız teknik ekibimize iletildi. En kısa sürede dönüş yapacağız.",
         error_connection: "Bağlantı hatası. Lütfen internetinizi kontrol ediniz."
+    },
+    whatsapp: {
+      label: "WhatsApp Destek",
+      message: "Merhaba, projeleriniz hakkında bilgi almak istiyorum."
+    },
+    projects_page: {
+      title: "Başarı Hikayeleri",
+      subtitle: "Fikirden gerçeğe dönüştürdüğümüz dijital deneyimler.",
+      stat_revenue: "Ciro Artışı",
+      stat_efficiency: "Verimlilik",
+      stat_users: "Aktif Kullanıcı",
+      btn_detail: "İncele"
     }
   },
   en: {
@@ -281,6 +294,7 @@ export const translations = {
         solutions: "Technologies",
         process: "Process",
         about: "Corporate",
+        projects: "Case Studies",
         contact: "Contact",
         startProject: "Start Project",
         darkMode: "Dark Mode",
@@ -536,6 +550,18 @@ export const translations = {
           title: "Request Received!",
           success_contact: "Your project details have been forwarded to our technical team. We will get back to you as soon as possible.",
           error_connection: "Connection error. Please check your internet."
+      },
+      whatsapp: {
+        label: "WhatsApp Support",
+        message: "Hello, I would like to get information about your projects."
+      },
+      projects_page: {
+        title: "Success Stories",
+        subtitle: "Digital experiences we turned from idea to reality.",
+        stat_revenue: "Revenue Growth",
+        stat_efficiency: "Efficiency",
+        stat_users: "Active Users",
+        btn_detail: "View Detail"
       }
   },
   ar: {
@@ -544,6 +570,7 @@ export const translations = {
       solutions: "التقنيات",
       process: "العملية",
       about: "الشركة",
+      projects: "أعمالنا",
       contact: "اتصل بنا",
       startProject: "ابدأ المشروع",
       darkMode: "الوضع الداكن",
@@ -799,7 +826,20 @@ export const translations = {
         title: "تم استلام الطلب!",
         success_contact: "تم إرسال تفاصيل مشروعك إلى فريقنا الفني. سنعود إليك في أقرب وقت ممكن.",
         error_connection: "خطأ في الاتصال. يرجى التحقق من الإنترنت."
+    },
+    whatsapp: {
+      label: "دعم واتساب",
+      message: "مرحباً، أريد الحصول على معلومات حول مشاريعكم."
+    },
+    projects_page: {
+      title: "قصص النجاح",
+      subtitle: "تجارب رقمية حولناها من فكرة إلى واقع.",
+      stat_revenue: "نمو الإيرادات",
+      stat_efficiency: "كفاءة",
+      stat_users: "مستخدم نشط",
+      btn_detail: "تفاصيل"
     }
+
   },
   fr: {
     navbar: {

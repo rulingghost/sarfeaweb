@@ -10,7 +10,7 @@ import {
   Settings, FileText, Truck, Bell, CreditCard, ArrowUp,
   Sun, Moon, Send, ExternalLink, Lightbulb, Target, Award, Cloud, Star, TrendingUp, Clock,
   ChevronRight, Plus, Minus, Laptop, AlertCircle, Share2, PieChart, Activity,
-  Boxes, GitBranch, Terminal, Wifi, Lock, Fingerprint, MousePointer2, ArrowLeft
+  Boxes, GitBranch, Terminal, Wifi, Lock, Fingerprint, MousePointer2, ArrowLeft, MessageCircle
 } from 'lucide-react';
 import { motion, AnimatePresence, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { translations } from './translations';
@@ -1115,12 +1115,178 @@ const HeroSection = ({ navigateTo, onOpenCalculator, t }) => {
   );
 };
 
+// --- WHATSAPP BUTTON ---
+const WhatsAppButton = ({ t }) => {
+  return (
+    <motion.a
+      href="https://wa.me/905015715767"
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      className="fixed bottom-8 left-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:shadow-green-500/30 transition-shadow flex items-center gap-3 border-2 border-white dark:border-slate-900 group"
+    >
+      <MessageCircle size={28} fill="currentColor" className="text-white" />
+      <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm">
+        {t.whatsapp.label}
+      </span>
+    </motion.a>
+  );
+};
+
+// --- PROJECTS SHOWCASE & MODAL ---
+const projectsData = [
+  {
+    id: 1,
+    title: "Global Lojistik ERP",
+    category: "ERP & Otomasyon",
+    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    stats: { revenue: "%150", efficiency: "%300", users: "5K+" },
+    description: "Uluslararası bir lojistik firması için geliştirdiğimiz, gümrük süreçlerini, araç takibini ve depo yönetimini tek merkezden yöneten yapay zeka destekli ERP sistemi.",
+    technologies: ["React", "Node.js", "PostgreSQL", "Docker"]
+  },
+  {
+    id: 2,
+    title: "B2B E-Ticaret Pazaryeri",
+    category: "E-Ticaret",
+    image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    stats: { revenue: "%85", efficiency: "%45", users: "12K+" },
+    description: "Endüstriyel ekipman tedarikçileri için kurduğumuz, bayi yönetiminin, özel fiyatlandırmanın ve stok entegrasyonlarının olduğu devasa B2B platformu.",
+    technologies: ["Next.js", "MongoDB", "Redis", "AWS"]
+  },
+  {
+    id: 3,
+    title: "Akıllı Fabrika IoT Sistemi",
+    category: "IoT & AI",
+    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    stats: { revenue: "%40", efficiency: "%95", users: "50+" },
+    description: "Üretim bandındaki makinelerden veri toplayarak arıza tahminlemesi yapan ve üretim verimliliğini optimize eden endüstriyel IoT çözümü.",
+    technologies: ["Python", "MQTT", "TensorFlow", "React Native"]
+  }
+];
+
+const ProjectModal = ({ project, onClose, t }) => {
+  if (!project) return null;
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-slate-900/80 backdrop-blur-md"
+      onClick={onClose}
+    >
+      <motion.div 
+        initial={{ scale: 0.9, y: 20 }}
+        animate={{ scale: 1, y: 0 }}
+        exit={{ scale: 0.9, y: 20 }}
+        className="bg-white dark:bg-slate-900 rounded-[2rem] w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative"
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-red-100 hover:text-red-500 transition-colors z-10">
+          <X size={24} />
+        </button>
+        <div className="relative h-64 md:h-96">
+          <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
+          <div className="absolute bottom-8 left-8 text-white">
+             <span className="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">{project.category}</span>
+             <h2 className="text-3xl md:text-4xl font-black">{project.title}</h2>
+          </div>
+        </div>
+        <div className="p-8 md:p-12">
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+             <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl text-center">
+                <div className="text-3xl font-black text-blue-600 dark:text-blue-400 mb-1">{project.stats.revenue}</div>
+                <div className="text-sm font-bold text-slate-500 uppercase">{t.projects_page.stat_revenue}</div>
+             </div>
+             <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl text-center">
+                <div className="text-3xl font-black text-green-600 dark:text-green-400 mb-1">{project.stats.efficiency}</div>
+                <div className="text-sm font-bold text-slate-500 uppercase">{t.projects_page.stat_efficiency}</div>
+             </div>
+             <div className="bg-slate-50 dark:bg-slate-800 p-6 rounded-2xl text-center">
+                <div className="text-3xl font-black text-purple-600 dark:text-purple-400 mb-1">{project.stats.users}</div>
+                <div className="text-sm font-bold text-slate-500 uppercase">{t.projects_page.stat_users}</div>
+             </div>
+          </div>
+          <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{t.projects_page.subtitle}</h3>
+          <p className="text-slate-600 dark:text-slate-300 leading-relaxed text-lg mb-8">
+            {project.description}
+          </p>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {project.technologies.map(tech => (
+              <span key={tech} className="px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-lg text-sm font-bold text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-700">
+                {tech}
+              </span>
+            ))}
+          </div>
+          <button onClick={onClose} className="w-full bg-blue-600 text-white py-4 rounded-xl font-bold hover:bg-blue-700 transition-colors">
+            {t.cta.button}
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
+const ProjectsShowcase = ({ onSelectProject, t }) => {
+  return (
+    <div className="pt-28 min-h-screen bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <SectionHeader 
+            title={t.projects_page.title} 
+            subtitle={t.projects_page.subtitle} 
+          />
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+            {projectsData.map((project, i) => (
+              <Reveal key={project.id} delay={i * 100}>
+                <div 
+                  onClick={() => onSelectProject(project)}
+                  className="group relative bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-900/20 transition-all cursor-pointer border border-slate-100 dark:border-slate-800"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <div className="absolute inset-0 bg-blue-600/20 group-hover:bg-blue-600/0 transition-colors z-10"></div>
+                    <img 
+                      src={project.image} 
+                      alt={project.title} 
+                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
+                    />
+                    <div className="absolute top-4 left-4 z-20">
+                       <span className="bg-white/90 dark:bg-slate-900/90 backdrop-blur text-slate-900 dark:text-white px-3 py-1 rounded-full text-xs font-bold shadow-sm">
+                         {project.category}
+                       </span>
+                    </div>
+                  </div>
+                  <div className="p-8">
+                    <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{project.title}</h3>
+                    <p className="text-slate-600 dark:text-slate-400 line-clamp-2 mb-6 text-sm leading-relaxed">{project.description}</p>
+                    <div className="flex items-center justify-between border-t border-slate-100 dark:border-slate-800 pt-6">
+                       <div className="flex flex-col">
+                          <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">{t.projects_page.stat_revenue}</span>
+                          <span className="text-lg font-black text-green-500">{project.stats.revenue}</span>
+                       </div>
+                       <button className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-900 dark:text-white group-hover:bg-blue-600 group-hover:text-white transition-all">
+                          <ArrowRight size={20} className="transform group-hover:translate-x-1 transition-transform"/>
+                       </button>
+                    </div>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+    </div>
+  );
+};
+
 // --- MAIN APP COMPONENT ---
 function App() {
   const [activePage, setActivePage] = useState('home');
   const [isScrolled, setIsScrolled] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [isCalculatorOpen, setIsCalculatorOpen] = useState(false);
+  const [selectedProject, setSelectedProject] = useState(null); // Project Modal State
   const [toast, setToast] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
@@ -1423,6 +1589,9 @@ function App() {
             </div>
           </div>
         );
+
+      case 'projects':
+        return <ProjectsShowcase onSelectProject={setSelectedProject} t={t} />;
 
       case 'process':
         return (
@@ -1762,6 +1931,12 @@ function App() {
         {isCalculatorOpen && <ProjectCalculator isOpen={isCalculatorOpen} onClose={() => setIsCalculatorOpen(false)} onShowToast={(msg) => setToast(msg)} t={t} />}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {selectedProject && <ProjectModal project={selectedProject} onClose={() => setSelectedProject(null)} t={t} />}
+      </AnimatePresence>
+      
+      <WhatsAppButton t={t} />
+
       <Navbar 
         activePage={activePage} 
         setActivePage={setActivePage} 
@@ -1805,6 +1980,7 @@ function App() {
               <ul className="space-y-4 text-slate-400 font-medium">
                 <li><button onClick={() => setActivePage('home')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.home}</button></li>
                 <li><button onClick={() => setActivePage('solutions')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.solutions}</button></li>
+                <li><button onClick={() => setActivePage('projects')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.projects}</button></li>
                 <li><button onClick={() => setActivePage('process')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.process}</button></li>
                 <li><button onClick={() => setActivePage('about')} className="hover:text-blue-400 transition-colors flex items-center gap-2 group"><span className="w-1.5 h-1.5 bg-blue-500 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></span> {t.navbar.about}</button></li>
               </ul>
