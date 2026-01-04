@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sarfea.tr/sitemap.xml

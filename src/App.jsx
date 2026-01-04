@@ -1049,7 +1049,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
                 {[1,2,3,4].map(i => (
                   <div key={i} className="w-12 h-12 rounded-full border-[3px] border-white dark:border-slate-900 bg-slate-200 flex items-center justify-center overflow-hidden shadow-sm hover:z-10 hover:scale-110 transition-all relative">
                     <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 mix-blend-overlay"></div>
-                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" className="w-full h-full object-cover"/>
+                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt={`Sarfea Software Müşteri Referansı ${i}`} className="w-full h-full object-cover"/>
                   </div>
                 ))}
               </div>
@@ -1442,16 +1442,104 @@ const ProjectsShowcase = ({ onSelectProject, t }) => {
 };
 
 // --- SEO COMPONENT ---
-const SEO = ({ title, description, lang = 'tr' }) => {
+const SEO = ({ title, description, lang = 'tr', type = 'website', image = 'https://sarfea.com/og-image.jpg', article = null }) => {
+  const siteName = "Sarfea Software | Özel Yazılım, ERP, CRM ve Mobil Uygulama Çözümleri";
+  const fullTitle = `${title} | ${siteName}`;
+  const canonical = `https://sarfea.tr/${lang === 'tr' ? '' : lang}`;
+
+  // --- DYNAMIC SEO FUEL ENGINE ---
+  // Bu motor, haftalık olarak trend anahtar kelimeleri rotasyona sokarak Google botlarını "taze içerik" ile besler.
+  const getDynamicFuel = () => {
+    const weekOfYear = Math.ceil(new Date().getUTCDate() / 7);
+    const pools = [
+      ["özel yazılım geliştirme", "ERP yazılımı", "CRM çözümleri", "mobil uygulama geliştirme"],
+      ["yapay zeka entegrasyonu", "dijital dönüşüm danışmanlığı", "bulut tabanlı yazılımlar", "saas çözümleri"],
+      ["ios ve android uygulama", "e-ticaret sistemleri", "endüstri 4.0 yazılımları", "blockchain çözümleri"],
+      ["fintech yazılımı", "lojiştik sistemleri", "otomasyon yazılımları", "büyük veri analizi"]
+    ];
+    return pools[weekOfYear % pools.length].join(", ");
+  };
+
+  const keywords = getDynamicFuel();
+
+  const schemaData = type === 'article' && article ? {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": article.title[lang],
+    "description": article.excerpt[lang],
+    "image": article.image,
+    "datePublished": article.date,
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": canonical
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Sarfea Software"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Sarfea Software",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://sarfea.com/logo.png"
+      }
+    }
+  } : {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Sarfea Software",
+    "url": "https://sarfea.com",
+    "logo": "https://sarfea.com/logo.png",
+    "description": description,
+    "sameAs": [
+      "https://linkedin.com/company/sarfea",
+      "https://twitter.com/sarfea",
+      "https://instagram.com/sarfea"
+    ],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+90-544-572-26-34",
+      "contactType": "customer service",
+      "areaServed": "Global",
+      "availableLanguage": ["Turkish", "English", "Arabic"]
+    }
+  };
+
   return (
     <Helmet>
-      <title>{title} | Sarfea Software</title>
-      <meta name="description" content={description} />
-      <meta property="og:title" content={`${title} | Sarfea Software`} />
+      {/* Primary Meta Tags */}
+      <title>{fullTitle}</title>
+      <meta name="title" content={fullTitle} />
+      <meta name="description" content={`${description} | ${keywords}`} />
+      <meta name="keywords" content={keywords} />
+      <link rel="canonical" href={canonical} />
+      
+      {/* Open Graph / Facebook */}
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={canonical} />
+      <meta property="og:title" content={fullTitle} />
       <meta property="og:description" content={description} />
-      <meta property="og:type" content="website" />
-      <meta name="twitter:card" content="summary_large_image" />
+      <meta property="og:image" content={image} />
+
+      {/* Twitter */}
+      <meta property="twitter:card" content="summary_large_image" />
+      <meta property="twitter:url" content={canonical} />
+      <meta property="twitter:title" content={fullTitle} />
+      <meta property="twitter:description" content={description} />
+      <meta property="twitter:image" content={image} />
+
+      {/* Additional SEO Control */}
+      <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+      <meta name="googlebot" content="index, follow" />
+      <meta name="theme-color" content="#0f172a" />
+      
       <html lang={lang} />
+      
+      {/* Structured Data */}
+      <script type="application/ld+json">
+        {JSON.stringify(schemaData)}
+      </script>
     </Helmet>
   );
 };
@@ -1521,6 +1609,52 @@ const blogData = [
     },
     date: "14.01.2024",
     readTime: "5 min"
+  },
+  {
+    id: 3,
+    title: {
+      tr: "2026 Dijital Dönüşüm Trendleri: İşinizi Nasıl Etkileyecek?",
+      en: "2026 Digital Transformation Trends: How Will It Affect Your Business?",
+      ar: "اتجاهات التحول الرقمي لعام 2026: كيف ستؤثر على عملك؟"
+    },
+    category: "trends",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    excerpt: {
+      tr: "Gelecek yılın en etkili teknolojileri: Hiper-otomasyon, sürdürülebilir yazılım ve kuantum hazırlık süreci.",
+      en: "Next year's most influential technologies: Hyper-automation, sustainable software, and quantum readiness process.",
+      ar: "التقنيات الأكثر نفوذاً في العام المقبل: الأتمتة المفرطة، والبرمجيات المستدامة، وعملية الاستعداد الكمي."
+    },
+    content: {
+      tr: `
+        <p>2026 yılına girerken dijital dünya büyük bir kırılma yaşıyor. Artık sadece "çevrimiçi olmak" yeterli değil. İşletmelerin daha akıllı, daha hızlı ve daha yeşil olması gerekiyor.</p>
+        
+        <h3>1. Hiper-Otomasyon</h3>
+        <p>Sadece basit görevler değil, karmaşık karar mekanizmaları da otomatize ediliyor. Sarfea olarak geliştirdiğimiz ERP sistemleri, insan müdahalesine gerek kalmadan stok ve finans yönetimini optimize edebiliyor.</p>
+        
+        <h3>2. Sürdürülebilir (Yeşil) Yazılım</h3>
+        <p>Karbon ayak izini düşüren, verimli kod mimarileri artık bir tercih değil zorunluluk. Bulut altyapılarında minimum kaynak tüketen sistemler inşa ediyoruz.</p>
+        
+        <h3>3. Low-Code ve No-Code'un Yükselişi</h3>
+        <p>Hızlı prototipleme ve esnek geliştirme süreçleri için bu araçlar profesyonel yazılımların içine daha fazla entegre oluyor.</p>
+      `,
+      en: `
+        <p>As we enter 2026, the digital world is experiencing a major breakthrough. It's no longer enough just to be "online". Businesses need to be smarter, faster, and greener.</p>
+        
+        <h3>1. Hyper-Automation</h3>
+        <p>Not only simple tasks but also complex decision mechanisms are being automated. The ERP systems we develop as Sarfea can optimize stock and finance management without the need for human intervention.</p>
+        
+        <h3>2. Sustainable (Green) Software</h3>
+        <p>Efficient code architectures that reduce carbon footprint are no longer an option but a necessity. We build systems that consume minimum resources in cloud infrastructures.</p>
+      `,
+      ar: `
+        <p>مع دخولنا عام 2026، يشهد العالم الرقمي طفرة كبرى. لم يعد كافيًا أن تكون "متصلاً بالإنترنت". يجب أن تكون الشركات أذكى وأسرع وأكثر صداقة للبيئة.</p>
+        
+        <h3>1. الأتمتة المفرطة</h3>
+        <p>لا يتم أتمتة المهام البسيطة فحسب، بل يتم أيضًا أتمتة آليات القرار المعقدة. يمكن لأنظمة ERP التي نطورها في Sarfea تحسين إدارة المخزون والتمويل دون الحاجة إلى تدخل بشري.</p>
+      `
+    },
+    date: "24.03.2024",
+    readTime: "7 min"
   },
   {
     id: 2,
@@ -1732,6 +1866,36 @@ const BlogShowcase = ({ t, language, onSelectPost }) => {
           </div>
        </div>
     </div>
+  );
+};
+
+// --- WHATSAPP BUTTON ---
+const WhatsAppButton = ({ t }) => {
+  return (
+    <motion.a
+      href="https://wa.me/905445722634"
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      whileHover={{ scale: 1.1 }}
+      whileTap={{ scale: 0.9 }}
+      className="fixed bottom-8 left-8 z-50 bg-[#25D366] text-white p-3 rounded-full shadow-lg hover:shadow-green-500/30 transition-shadow flex items-center gap-3 border-2 border-white dark:border-slate-900 group"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="32"
+        height="32"
+        fill="currentColor"
+        className="text-white"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+      </svg>
+      <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm">
+        {t.whatsapp.label}
+      </span>
+    </motion.a>
   );
 };
 
@@ -1951,6 +2115,9 @@ function App() {
               title={selectedBlogPost ? selectedBlogPost.title[language] : t.navbar.blog} 
               description={selectedBlogPost ? selectedBlogPost.excerpt[language] : t.blog_page.subtitle}
               lang={language}
+              type={selectedBlogPost ? 'article' : 'website'}
+              image={selectedBlogPost ? selectedBlogPost.image : undefined}
+              article={selectedBlogPost}
             />
             {selectedBlogPost ? (
               <BlogPostDetail 

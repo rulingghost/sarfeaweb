@@ -145,6 +145,10 @@ export const translations = {
         }
       ]
     },
+    solutions_page: {
+      title: "Teknoloji ve Çözümlerimiz",
+      subtitle: "ERP, CRM, Mobil Uygulama ve Yapay Zeka entegrasyonları ile uçtan uca dijital dönüşüm çözümleri sunuyoruz.",
+    },
     process_page: {
       title: "Nasıl Çalışıyoruz?",
       subtitle: "Fikirden ürüne giden yolda şeffaf ve çevik bir süreç.",
