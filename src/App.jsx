@@ -1276,26 +1276,6 @@ const CTA = ({ setActivePage, t }) => (
   </section>
 );
 
-// --- WHATSAPP BUTTON ---
-const WhatsAppButton = ({ t }) => {
-  return (
-    <motion.a
-      href="https://wa.me/905015715767"
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, scale: 0 }}
-      animate={{ opacity: 1, scale: 1 }}
-      whileHover={{ scale: 1.1 }}
-      whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 left-8 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:shadow-green-500/30 transition-shadow flex items-center gap-3 border-2 border-white dark:border-slate-900 group"
-    >
-      <MessageCircle size={28} fill="currentColor" className="text-white" />
-      <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-500 ease-in-out whitespace-nowrap font-bold text-sm">
-        {t.whatsapp.label}
-      </span>
-    </motion.a>
-  );
-};
 
 // --- PROJECTS SHOWCASE & MODAL ---
 const projectsData = [
