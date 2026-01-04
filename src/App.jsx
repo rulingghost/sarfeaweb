@@ -358,16 +358,16 @@ const ProjectCalculator = ({ isOpen, onClose, onShowToast, t }) => {
 };
 
 const SectionHeader = ({ title, subtitle }) => (
-  <div className="text-center mb-16 px-4">
+  <div className="text-center mb-10 md:mb-16 px-4">
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5 }}
     >
-      <h2 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">{title}</h2>
-      <div className="h-1.5 w-24 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mx-auto mb-6 rounded-full opacity-80"></div>
-      <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>
+      <h2 className="text-2xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-4 md:mb-6 tracking-tight">{title}</h2>
+      <div className="h-1 w-16 md:h-1.5 md:w-24 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 mx-auto mb-4 md:mb-6 rounded-full opacity-80"></div>
+      <p className="text-base md:text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto leading-relaxed">{subtitle}</p>
     </motion.div>
   </div>
 );
@@ -511,7 +511,7 @@ const PricingCard = ({ plan, isPopular, onSelect }) => (
   <motion.div 
     whileHover={{ y: -8, scale: 1.02 }}
     transition={{ duration: 0.3 }}
-    className={`relative p-8 rounded-[2.5rem] border transition-all duration-500 flex flex-col overflow-hidden ${isPopular ? 'bg-slate-900 text-white border-transparent shadow-2xl shadow-blue-900/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-xl dark:shadow-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700 group'}`}
+    className={`relative p-5 lg:p-10 rounded-3xl border transition-all duration-500 flex flex-col overflow-hidden ${isPopular ? 'bg-slate-900 text-white border-transparent shadow-2xl shadow-blue-900/30' : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-xl dark:shadow-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700 group'}`}
   >
     {isPopular && (
       <>
@@ -523,10 +523,10 @@ const PricingCard = ({ plan, isPopular, onSelect }) => (
       </>
     )}
     <div className="relative z-10 flex flex-col h-full">
-      <h3 className={`text-3xl font-bold mb-2 ${isPopular ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.name}</h3>
+      <h3 className={`text-2xl lg:text-3xl font-bold mb-2 ${isPopular ? 'text-white' : 'text-slate-900 dark:text-white'}`}>{plan.name}</h3>
       <p className={`text-sm mb-8 font-medium ${isPopular ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>{plan.description}</p>
       <div className="mb-8 flex items-baseline">
-        <span className="text-5xl font-black tracking-tight">{plan.price}</span>
+        <span className="text-4xl lg:text-5xl font-black tracking-tight">{plan.price}</span>
         {plan.price !== "Özel Teklif" && <span className={`text-sm font-medium ml-2 ${isPopular ? 'text-slate-300' : 'text-slate-500 dark:text-slate-400'}`}>/başlangıç</span>}
       </div>
       <ul className="space-y-5 mb-10 flex-1">
@@ -751,11 +751,11 @@ const Timeline = ({ t }) => {
 
 const Newsletter = ({ t }) => {
   return (
-    <section className="py-20 relative overflow-hidden bg-slate-900">
+    <section className="py-12 md:py-20 relative overflow-hidden bg-slate-900">
       <div className="absolute inset-0 bg-blue-600/10 dark:bg-blue-900/20"></div>
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
       <div className="max-w-4xl mx-auto px-4 relative z-10 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t?.newsletter?.title || "Teknoloji Bültenimize Abone Olun"}</h2>
+        <h2 className="text-2xl md:text-4xl font-bold text-white mb-4">{t?.newsletter?.title || "Teknoloji Bültenimize Abone Olun"}</h2>
         <p className="text-blue-100 mb-8 max-w-2xl mx-auto">{t?.newsletter?.text || "En yeni teknoloji trendleri, yazılım dünyasından haberler ve Sarfea'dan güncellemeler için bültenimize katılın."}</p>
         <form className="flex flex-col md:flex-row gap-4 max-w-lg mx-auto" onSubmit={(e) => e.preventDefault()}>
           <input 
@@ -873,14 +873,14 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
           ))}
         </div>
 
-        <div className="hidden md:flex items-center gap-4">
-          <button onClick={() => setDarkMode(!darkMode)} className="w-11 h-11 rounded-full border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-yellow-400 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700">
-            {darkMode ? <Sun size={20} className="hover:rotate-90 transition-transform" /> : <Moon size={20} className="hover:-rotate-12 transition-transform" />}
+        <div className="flex md:flex items-center gap-3">
+          <button onClick={() => setDarkMode(!darkMode)} className="w-10 h-10 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-yellow-400 bg-white dark:bg-slate-900 flex items-center justify-center shadow-sm">
+            {darkMode ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           
           <div className="relative group/lang">
             <button 
-               className="w-11 h-11 rounded-full border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md transition-all flex items-center justify-center bg-slate-50/50 dark:bg-slate-900/50 hover:border-blue-300 dark:hover:border-blue-700 font-bold text-sm"
+               className="w-10 h-10 rounded-xl border border-slate-200/80 dark:border-slate-700/80 text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-900 flex items-center justify-center font-bold text-xs shadow-sm"
             >
                {language.toUpperCase()}
             </button>
@@ -899,9 +899,8 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
                   <button
                     key={lang.code}
                     onClick={() => setLanguage(lang.code)}
-                    className={`w-full text-left px-4 py-3 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors flex items-center gap-2 ${language === lang.code ? 'text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10' : 'text-slate-600 dark:text-slate-300'}`}
+                    className="w-full text-left px-4 py-3 text-xs font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                   >
-                    <span className={`w-2 h-2 rounded-full ${language === lang.code ? 'bg-blue-600' : 'bg-transparent'}`}></span>
                     {lang.label}
                   </button>
                 ))}
@@ -909,8 +908,8 @@ const Navbar = ({ activePage, setActivePage, isScrolled, darkMode, setDarkMode, 
             </div>
           </div>
 
-          <button onClick={() => handleNavClick('contact')} className="bg-gradient-to-r from-slate-900 to-slate-800 dark:from-white dark:to-slate-100 hover:from-blue-600 hover:to-indigo-600 dark:hover:from-blue-500 dark:hover:to-indigo-500 text-white dark:text-slate-900 px-7 py-3 rounded-full font-bold transition-all shadow-lg shadow-slate-900/10 dark:shadow-white/5 hover:shadow-blue-500/30 flex items-center gap-2 group hover:scale-[1.02] active:scale-[0.98]">
-            <Zap size={18} className="group-hover:fill-current transition-colors"/> {t.navbar.startProject}
+          <button onClick={() => setActivePage('contact')} className="hidden sm:flex bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-blue-500/20 items-center gap-2">
+            <Zap size={16} fill="currentColor"/> {t.navbar.startProject}
           </button>
         </div>
 
@@ -1000,7 +999,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
 
   return (
-    <div className="relative min-h-screen flex items-center pt-20 overflow-hidden">
+    <div className="relative min-h-screen flex items-center pt-24 md:pt-20 overflow-hidden">
       <div className="absolute inset-0 overflow-hidden -z-10 bg-slate-50 dark:bg-slate-950 transition-colors duration-500">
         <motion.div style={{ y: y1 }} className="absolute top-20 left-10 w-80 h-80 bg-blue-400/30 dark:bg-blue-600/20 rounded-full blur-[100px] animate-blob mix-blend-multiply dark:mix-blend-soft-light" />
         <motion.div style={{ y: y2 }} className="absolute top-40 right-10 w-96 h-96 bg-purple-400/30 dark:bg-purple-600/20 rounded-full blur-[100px] animate-blob animation-delay-2000 mix-blend-multiply dark:mix-blend-soft-light" />
@@ -1009,7 +1008,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           <motion.div 
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
@@ -1024,7 +1023,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
               {t.hero.tag}
             </div>
             
-            <h1 className="text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1]">
+            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-[1.1]">
               {t.hero.title_prefix} <br/>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 dark:from-blue-400 dark:via-indigo-400 dark:to-purple-400 animate-gradient-x">
                 {t.hero.title_suffix}
@@ -1049,7 +1048,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
                 {[1,2,3,4].map(i => (
                   <div key={i} className="w-12 h-12 rounded-full border-[3px] border-white dark:border-slate-900 bg-slate-200 flex items-center justify-center overflow-hidden shadow-sm hover:z-10 hover:scale-110 transition-all relative">
                     <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-purple-500/20 mix-blend-overlay"></div>
-                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt={`Sarfea Software Müşteri Referansı ${i}`} className="w-full h-full object-cover"/>
+                    <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt={`Sarfea Software Müşteri Referansı ${i}`} loading="lazy" className="w-full h-full object-cover"/>
                   </div>
                 ))}
               </div>
@@ -1124,7 +1123,7 @@ const Hero = ({ navigateTo, onOpenCalculator, t }) => {
 // Dummy components for refactored renderContent
 
 const StatsSection = ({ t }) => (
-  <section className="py-24 bg-white dark:bg-slate-900 relative z-10">
+  <section className="py-16 md:py-24 bg-white dark:bg-slate-900 relative z-10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeader 
         title={t.stats_section.title} 
@@ -1132,10 +1131,10 @@ const StatsSection = ({ t }) => (
       />
       <LogoMarquee />
     </div>
-    <div className="py-32 bg-slate-50 dark:bg-slate-950/50 relative overflow-hidden">
+    <div className="py-16 md:py-32 bg-slate-50 dark:bg-slate-950/50 relative overflow-hidden">
       <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05]"></div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-20 items-center">
           <Reveal>
             <h2 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-white mb-8 tracking-tight leading-tight">
               {t.stats_section.main_title_prefix} <br/>
@@ -1184,7 +1183,7 @@ const StatsSection = ({ t }) => (
   </section>
 );
 const CRMPreview = ({ t }) => (
-  <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
+  <section className="py-12 md:py-32 bg-white dark:bg-slate-900 relative z-10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeader 
         title="Gelişmiş CRM Çözümleri" 
@@ -1201,7 +1200,7 @@ const CRMPreview = ({ t }) => (
   </section>
 );
 const TechStack = ({ t }) => (
-  <section className="py-32 bg-white dark:bg-slate-900 relative z-10">
+  <section className="py-12 md:py-32 bg-white dark:bg-slate-900 relative z-10">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeader 
         title={t.tech_stack.title} 
@@ -1233,7 +1232,7 @@ const TechStack = ({ t }) => (
   </section>
 );
 const FAQ = ({ t }) => (
-  <section className="py-32 bg-slate-50 dark:bg-slate-950/50">
+  <section className="py-12 md:py-32 bg-slate-50 dark:bg-slate-950/50">
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <SectionHeader 
         title={t.faq.title} 
@@ -1244,7 +1243,7 @@ const FAQ = ({ t }) => (
   </section>
 );
 const CTA = ({ setActivePage, t }) => (
-  <section className="py-32 relative overflow-hidden">
+  <section className="py-12 md:py-32 relative overflow-hidden">
     <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-indigo-700 to-purple-800"></div>
     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/10 to-transparent"></div>
@@ -1260,10 +1259,10 @@ const CTA = ({ setActivePage, t }) => (
     />
 
     <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-      <h2 className="text-4xl md:text-6xl font-extrabold text-white mb-8 tracking-tight leading-tight drop-shadow-sm">
+      <h2 className="text-3xl md:text-6xl font-extrabold text-white mb-6 md:mb-8 tracking-tight leading-tight drop-shadow-sm">
         {t.cta.title}
       </h2>
-      <p className="text-xl md:text-2xl text-blue-100 mb-12 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-sm">
+      <p className="text-lg md:text-2xl text-blue-100 mb-8 md:mb-12 max-w-3xl mx-auto font-medium leading-relaxed drop-shadow-sm">
         {t.cta.description}
       </p>
       <button 
@@ -1325,15 +1324,27 @@ const ProjectModal = ({ project, onClose, t }) => {
         className="bg-white dark:bg-slate-900 rounded-[2rem] w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl relative"
         onClick={e => e.stopPropagation()}
       >
-        <button onClick={onClose} className="absolute top-4 right-4 p-2 bg-slate-100 dark:bg-slate-800 rounded-full hover:bg-red-100 hover:text-red-500 transition-colors z-10">
-          <X size={24} />
+        <button onClick={onClose} className="absolute top-4 right-4 p-2.5 bg-white/80 dark:bg-slate-800/80 backdrop-blur-md rounded-2xl hover:bg-red-500 hover:text-white transition-all z-20 shadow-lg border border-white/20 dark:border-slate-700/50">
+          <X size={22} />
         </button>
-        <div className="relative h-64 md:h-96">
+        <div className="relative h-64 md:h-[450px]">
           <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent"></div>
-          <div className="absolute bottom-8 left-8 text-white">
-             <span className="bg-blue-600 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2 inline-block">{project.category}</span>
-             <h2 className="text-3xl md:text-4xl font-black">{project.title}</h2>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent"></div>
+          <div className="absolute bottom-6 left-6 right-6 md:bottom-10 md:left-10 text-white">
+             <motion.span 
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="bg-blue-600 px-4 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest mb-3 inline-block shadow-lg shadow-blue-500/30"
+             >
+               {project.category}
+             </motion.span>
+             <motion.h2 
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="text-3xl md:text-5xl font-black leading-tight"
+             >
+               {project.title}
+             </motion.h2>
           </div>
         </div>
         <div className="p-8 md:p-12">
@@ -1384,13 +1395,14 @@ const ProjectsShowcase = ({ onSelectProject, t }) => {
               <Reveal key={project.id} delay={i * 100}>
                 <div 
                   onClick={() => onSelectProject(project)}
-                  className="group relative bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-900/20 transition-all cursor-pointer border border-slate-100 dark:border-slate-800"
+                  className="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-blue-900/20 transition-all cursor-pointer border border-slate-100 dark:border-slate-800"
                 >
                   <div className="relative h-64 overflow-hidden">
                     <div className="absolute inset-0 bg-blue-600/20 group-hover:bg-blue-600/0 transition-colors z-10"></div>
                     <img 
                       src={project.image} 
                       alt={project.title} 
+                      loading="lazy"
                       className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700" 
                     />
                     <div className="absolute top-4 left-4 z-20">
@@ -1754,6 +1766,50 @@ const blogData = [
     },
     date: "28.02.2024",
     readTime: "4 min"
+  },
+  {
+    id: 4,
+    title: {
+      tr: "Cloud-Native Mimari: 2026'nın Yeni Standartı",
+      en: "Cloud-Native Architecture: The New Standard of 2026",
+      ar: "بنية السحاب الأصلية: المعيار الجديد لعام 2026"
+    },
+    category: "dev",
+    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    excerpt: {
+      tr: "Sunucusuz mimariler, konteyner orkestrasyonu ve otomatize edilmiş altyapıların işletmenize maliyet ve hız avantajı.",
+      en: "Serverless architectures, container orchestration, and automated infrastructures providing cost and speed advantages to your business.",
+      ar: "البنى الخالية من الخادم، وتنسيق الحاويات، والبنى التحتية الآلية التي توفر مزايا التكلفة والسرعة لعملك."
+    },
+    content: {
+      tr: `
+        <p>Yazılım dünyasında artık sadece "bulutta olmak" değil, "bulut için doğmak" (Cloud-Native) konuşuluyor. Sarfea olarak, tüm yeni nesil projelerimizi bu mimari üzerine inşa ediyoruz.</p>
+        
+        <h3>Neden Cloud-Native?</h3>
+        <ul>
+          <li><strong>Sonsuz Ölçeklenebilirlik:</strong> Trafik arttığında sisteminiz otomatik olarak kaynaklarını artırır.</li>
+          <li><strong>Yüksek Erişilebilirlik:</strong> Tek bir sunucu hatası tüm sistemi çökertmez.</li>
+          <li><strong>Maliyet Optimizasyonu:</strong> Sadece kullandığınız kaynak kadar ödeme yaparsınız.</li>
+        </ul>
+        
+        <p>Özellikle yüksek trafikli e-ticaret ve ERP sistemlerinde bu mimari, rakiplerinizle aranızdaki farkı belirleyen temel unsurdur.</p>
+      `,
+      en: `
+        <p>In the software world, we are no longer talking about just "being in the cloud", but "being born for the cloud" (Cloud-Native). At Sarfea, we build all our new generation projects on this architecture.</p>
+        
+        <h3>Why Cloud-Native?</h3>
+        <ul>
+          <li><strong>Infinite Scalability:</strong> Your system automatically increases its resources when traffic increases.</li>
+          <li><strong>High Availability:</strong> A single server failure does not bring down the entire system.</li>
+          <li><strong>Cost Optimization:</strong> You only pay for the resources you use.</li>
+        </ul>
+      `,
+      ar: `
+        <p>في عالم البرمجيات، لم نعد نتحدث عن مجرد "التواجد في السحاب"، بل نتحدث عن "الولادة من أجل السحاب" (Cloud-Native). في Sarfea، نقوم ببناء جميع مشاريع الجيل الجديد لدينا على هذه البنية.</p>
+      `
+    },
+    date: "12.05.2024",
+    readTime: "6 min"
   }
 ];
 
@@ -1775,7 +1831,7 @@ const BlogPostDetail = ({ post, onBack, t, language }) => {
 
         <article>
           <div className="relative h-[400px] mb-10 rounded-[2.5rem] overflow-hidden shadow-2xl">
-            <img src={post.image} alt={post.title[language]} className="w-full h-full object-cover" />
+            <img src={post.image} alt={post.title[language]} loading="lazy" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent"></div>
             <div className="absolute bottom-10 left-10 right-10 text-white">
               <span className="bg-blue-600 px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider mb-4 inline-block">
@@ -1816,7 +1872,7 @@ const BlogShowcase = ({ t, language, onSelectPost }) => {
               <Reveal key={post.id} delay={i * 100}>
                 <article className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all group flex flex-col h-full border border-slate-100 dark:border-slate-800">
                     <div className="h-48 overflow-hidden relative">
-                       <img src={post.image} alt={post.title[language]} className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
+                       <img src={post.image} alt={post.title[language]} loading="lazy" className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" />
                        <div className="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">
                          {t.blog_page.categories[post.category]}
                        </div>
@@ -1849,6 +1905,45 @@ const BlogShowcase = ({ t, language, onSelectPost }) => {
   );
 };
 
+// --- DYNAMIC CONTENT PULSE (AUTOMATIC SEO FUEL) ---
+const TechnicalPulse = ({ language }) => {
+  const tips = {
+    tr: [
+      "Bugünün İpucu: Web sitenizin LCP değerini 2.5s altına düşürmek SEO için kritiktir.",
+      "Trend: AI destekli CRM sistemleri müşteri dönüşümünü %40 artırıyor.",
+      "Güvenlik: API uç noktalarınızda mutlaka Rate Limiting kullanın.",
+      "Hibe Haberi: Dijital dönüşüm projeleri için KOSGEB destekleri %70'e çıktı.",
+      "Yazılım Trendi: 2026'da Micro-frontend mimarisi ana standart haline geliyor."
+    ],
+    en: [
+      "Tip of the Day: Keep your LCP under 2.5s for critical SEO boost.",
+      "Trend: AI-powered CRM systems increase conversion by up to 40%.",
+      "Security: Always implement Rate Limiting on your API endpoints.",
+      "Tech News: Serverless architectures reduce infrastructure costs by 60%.",
+      "Dev Standard: Micro-frontend architecture is becoming the main standard in 2026."
+    ],
+    ar: [
+      "نصيحة اليوم: حافظ على LCP أقل من 2.5 ثانية لتعزيز تحسين محركات البحث.",
+      "الاتجاه: أنظمة CRM المدعومة بالذكاء الاصطناعي تزيد التحويل بنسبة تصل إلى 40%.",
+      "الأمان: استخدم دائمًا تحديد المعدل على نهايات API الخاصة بك.",
+      "أخبار التكنولوجيا: تعمل بنى Serverless على تقليل تكاليف البنية التحتية بنسبة 60%.",
+      "معيار المطور: أصبحت بنية Micro-frontend هي المعيار الرئيسي في عام 2026."
+    ]
+  };
+  
+  const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+  const currentTip = tips[language] ? tips[language][dayOfYear % tips[language].length] : tips['en'][dayOfYear % tips['en'].length];
+
+  return (
+    <div className="bg-gradient-to-r from-blue-700 to-indigo-800 text-white py-2.5 px-6 text-center text-xs sm:text-sm font-bold flex items-center justify-center gap-3 shadow-lg z-[60] relative">
+      <Zap size={16} className="text-yellow-400 animate-pulse" />
+      <span className="tracking-wide uppercase font-black opacity-80 border-r border-white/20 pr-3 hidden sm:inline">TECHNICAL PULSE</span>
+      <span>{currentTip}</span>
+      <div className="absolute inset-0 bg-white/5 pointer-events-none animate-shimmer"></div>
+    </div>
+  );
+};
+
 // --- WHATSAPP BUTTON ---
 const WhatsAppButton = ({ t }) => {
   return (
@@ -1860,7 +1955,7 @@ const WhatsAppButton = ({ t }) => {
       animate={{ opacity: 1, scale: 1 }}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
-      className="fixed bottom-8 left-8 z-50 bg-[#25D366] text-white p-3 rounded-full shadow-lg hover:shadow-green-500/30 transition-shadow flex items-center gap-3 border-2 border-white dark:border-slate-900 group"
+      className="fixed bottom-24 left-5 md:bottom-8 md:left-8 z-50 bg-[#25D366] text-white p-3 md:p-4 rounded-full shadow-lg hover:shadow-green-500/30 transition-shadow flex items-center gap-3 border-2 border-white dark:border-slate-900 group"
     >
       <svg
         viewBox="0 0 24 24"
@@ -1876,6 +1971,49 @@ const WhatsAppButton = ({ t }) => {
         {t.whatsapp.label}
       </span>
     </motion.a>
+  );
+};
+
+// --- MOBILE BOTTOM NAVIGATION (APP FEEL) ---
+const MobileNavigation = ({ activePage, setActivePage, t }) => {
+  const navItems = [
+    { id: 'home', icon: LayoutDashboard, label: t.navbar.home },
+    { id: 'solutions', icon: Boxes, label: t.navbar.solutions },
+    { id: 'projects', icon: Briefcase, label: t.navbar.projects },
+    { id: 'contact', icon: MessageSquare, label: t.navbar.contact }
+  ];
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-t border-slate-200/50 dark:border-slate-800/50 md:hidden z-[100] px-6 py-3 pb-8">
+      <div className="flex justify-between items-center max-w-md mx-auto">
+        {navItems.map((item) => {
+          const isActive = activePage === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActivePage(item.id)}
+              className="group flex flex-col items-center gap-1 relative px-2"
+            >
+              <motion.div
+                whileTap={{ scale: 0.9 }}
+                className={`p-2 rounded-2xl transition-all duration-300 ${isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-slate-500 dark:text-slate-400'}`}
+              >
+                <item.icon size={22} strokeWidth={isActive ? 2.5 : 2} />
+              </motion.div>
+              <span className={`text-[10px] font-black uppercase tracking-tighter transition-all duration-300 ${isActive ? 'text-blue-600 dark:text-blue-400 opacity-100' : 'opacity-0 group-hover:opacity-100'}`}>
+                {item.label}
+              </span>
+              {isActive && (
+                <motion.div 
+                  layoutId="activeTab"
+                  className="absolute -top-3 w-1 h-1 bg-blue-600 rounded-full"
+                />
+              )}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 
@@ -2452,6 +2590,8 @@ function App() {
         {/* Scroll Progress Bar */}
         <motion.div className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 origin-left z-[100]" style={{ scaleX }} />
 
+        <TechnicalPulse language={language} />
+
         <Navbar 
           activePage={activePage} 
           setActivePage={setActivePage} 
@@ -2527,9 +2667,9 @@ function App() {
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: isScrolled ? 1 : 0, scale: isScrolled ? 1 : 0 }}
         onClick={scrollToTop}
-        className="fixed bottom-8 right-8 z-40 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-4 rounded-full shadow-lg hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700"
+        className="fixed bottom-24 right-20 md:bottom-8 md:right-24 z-40 bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-3 md:p-4 rounded-full shadow-lg hover:shadow-xl transition-all border border-slate-200 dark:border-slate-700"
       >
-        <ArrowUp size={24} />
+        <ArrowUp size={20} />
       </motion.button>
 
       <AnimatePresence>
@@ -2558,6 +2698,8 @@ function App() {
       </AnimatePresence>
 
       <WhatsAppButton t={t} />
+
+      <MobileNavigation activePage={activePage} setActivePage={setActivePage} t={t} />
 
     </div>
     </HelmetProvider>
