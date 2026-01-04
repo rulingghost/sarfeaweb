@@ -1292,7 +1292,7 @@ const projectsData = [
     id: 2,
     title: "B2B E-Ticaret Pazaryeri",
     category: "E-Ticaret",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f7a07d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     stats: { revenue: "%85", efficiency: "%45", users: "12K+" },
     description: "Endüstriyel ekipman tedarikçileri için kurduğumuz, bayi yönetiminin, özel fiyatlandırmanın ve stok entegrasyonlarının olduğu devasa B2B platformu.",
     technologies: ["Next.js", "MongoDB", "Redis", "AWS"]
